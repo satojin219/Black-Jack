@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Jack</title>
+
+  <link rel="stylesheet" href="style.css">
+  <!--font-awsome-->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+  <!--bootstrap-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <!-- <script src="https://unpkg.com/phosphor-icons"></script> -->
+
+</head>
+
+<body>
+
+  <div class=" vh-100 d-flex  justify-content-center align-items-center">
+    <div class="d-flex align-items-center col-lg-8 col-9 ">
+      <div class="shadow-lg col-12 text-center p-4  rounded  ">
+        <h2 class="text-white">Welcome to Card Game!</h2>
+        <div class="input-group my-4">
+          <input type="text" class="form-control  input-group-prepend" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group my-4">
+          <div class="input-group-prepend">
+            <label class="input-group-text bg-success text-white" for="inputGroupSelect01">GameType</label>
+          </div>
+          <select class="custom-select" id="inputGroupSelect01">
+            <option selected>Choose...</option>
+            <option value="blackjack">Black Jack</option>
+
+          </select>
+        </div>
+
+        <button type="button" class="btn btn-success col-12 text-white p-3 font-weight-bold rounded-pill"><i class="fas fa-spade text-dark"></i>  <i class="fas fa-club text-dark"></i> Game Start  <i class="fas fa-diamond text-danger"></i> <i class="fas fa-heart text-danger"></i></button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="main.js"></script>
+</body>
+
+</html>

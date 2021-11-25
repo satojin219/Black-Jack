@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Jack</title>
+
+  <link rel="stylesheet" href="style.css">
+<!--font-awsome-->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+  <!--bootstrap-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- <script src="https://unpkg.com/phosphor-icons"></script> -->
+  
+</head>
+<body class="fixed">
+  
+  <!-- Button trigger modal -->
+<button type="button" class="btn modal-btn" data-toggle="modal" data-target="#exampleModal">
+  <i class="fas fa-clipboard-list fa-4x text-white py-3 px-4 log"></i>
+</button>
+
+<div id="modal" class="modal">
+  <div class="modal-body">
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center bg-white col-9 p-3 rounded">
+          <div class="d-flex flex-column" id="result-log-target">
+            <h5>Round: 1</h5>
+            <ul class="p-0">
+              <li>name : House, score 21</li>
+              <li>name : Jin,  lose : -800, bet 200,score : 22</li>  
+            </ul>
+            <button for="trigger" class="close-button text-white btn btn-primary">✖️ 戻る</button>
+          </div>
+        </div>
+      </div>    
+    </div>
+</div>
+
+
+<div class="modal  vh-100 d-flex  justify-content-center align-items-center">
+  <div class="d-flex align-items-center col-lg-8 col-9 ">
+    <div class="shadow-lg col-12 text-center p-5  rounded  bg-light">
+      <h2 class="">You Win +20</h2>
+      <button type="button" class="btn btn-success col-12 text-white  font-weight-bold rounded m-1">  Next Game  </button>
+      
+    
+    </div>
+  </div>
+</div>
+
+  <div class="d-flex justify-content-around align-items-center  flex-column text-center mb-200px mt-1 ">
+    <div class="text-white">
+      <h3><i class="fas fa-user-tie"></i> House</h3>
+      <p class="mx-1 my-1 p-1">Score: 6</p>
+      
+    </div>
+    
+    <div class="d-flex justify-content-around align-items-center  col-3 col-md-2 col-lg-1 mt-1">
+      <div>
+        <div class="card">
+          <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+          <div class="back"></div>
+        </div>
+      </div>
+      
+      
+    </div>
+  </div>
+  
+  
+  
+  <div class="col-12 d-flex jusfify-content-between  text-center ">
+    
+    <div class="d-flex justify-content-around align-items-center  flex-column col-4 mb-150px" >
+      <div class="text-white">
+        <h3><i class="fas fa-robot"></i>
+          Bot 1</h3>
+          <div class="d-md-flex">
+            <p class="mx-1 my-1 p-1">Score: 13</p>
+            <p class="mx-1 my-1 p-1 ">Bet: 230</p>
+            <p class="mx-1 my-1 p-1">Chips: 90</p>
+          </div>
+          <p class="mx-1 my-1 font-weight-bold p-1 hit">hit</p>
+          
+        </div>
+        
+        <div class="d-flex justify-content-around align-items-center mt-2  col-9 col-lg-5 col-md-4">
+          <div>
+            <div class="card">
+              <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+              <div class="back"></div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="card">
+              <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+              <div class="back"></div>
+            </div>
+          </div> 
+          <div>
+            <div class="card">
+              <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+              <div class="back"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+              <div class="back"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="d-flex justify-content-around align-items-center  flex-column text-center col-4 mb-150px">
+        <div class="text-white">
+          <h3><i class="fas fa-user faa-float animated"></i> Jin</h3>
+          <div class="d-md-flex">
+            <p class="mx-1 my-1 p-1">Score: 22</p>
+            <p class="mx-1 my-1 p-1">Bet: 230</p>
+            <p class="mx-1 my-1 p-1">Chips: 90</p>
+          </div>
+          <p class="mx-1 my-1 font-weight-bold p-1 stand">stand </p>
+          
+        </div>
+        
+        <div class="d-flex justify-content-around align-items-center mt-2  col-9 col-lg-5 col-md-4">
+          
+          <div>
+            <div class="card">
+              <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+              <div class="back"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+              <div class="back"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="d-flex justify-content-around align-items-center  flex-column col-4 text-center mb-150px">
+        <div class="text-white">
+          <h3><i class="fas fa-robot"></i>
+            Bot 2</h3>
+<div class="d-md-flex">
+  <p class="mx-1 my-1 p-1">Score: 17</p>
+  <p class="mx-1 my-1 p-1">Bet: 250</p>
+  <p class="mx-1 my-1 p-1">Chips: 500</p>
+</div>
+<p class="mx-1 my-1 font-weight-bold p-1 blackjack">blackjack</p>
+
+</div>
+
+<div class="d-flex justify-content-around align-items-center mt-2  col-9 col-lg-5 col-md-4">
+  <div>
+    <div class="card">
+      <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+      <div class="back"></div>
+    </div>
+  </div>
+  
+  <div>
+    <div class="card">
+      <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+      <div class="back"></div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+    <div class="front"><span>K&#9824;</span>&#9824;<span>K&#9824;</span></div>
+    <div class="back"></div>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+
+
+
+
+<div class="wood d-flex  justify-content-center">
+  
+  <div class="d-flex justify-content-around align-items-center  p-4 col-lg-9 col-10" >
+        
+        <div class="d-flex flex-column">
+          <div href="#" class="btn-real-dent btn-blue" style="display: block;">
+            <i class="fab fa-font-awesome-flag"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">SURRENDER</div>
+        </div>
+        
+        <div class="d-flex flex-column">
+          <div href="#" class="btn-real-dent btn-red" style="display: block;">
+            <i class="fas fa-swords"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">STAND</div>
+        </div>
+        
+        
+        
+        <div class="d-flex flex-column ">
+          <div href="#" class="btn-real-dent btn-yellow" style="display: block;">
+            <i class="far fa-coins"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">DOUBLE</div>
+        </div>
+        
+        <div class="d-flex flex-column">
+          <div href="#" class="btn-real-dent btn-green" style="display: block;">
+            <i class="fas fa-coin"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">HIT</div>
+        </div>
+        
+      </div>
+    </div>
+
+    
+    <!-- 
+      &#9827;
+      &#9829;
+      &#9830;
+   -->
+  
+
+
+
+
+    <script src="animate.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
