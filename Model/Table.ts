@@ -166,6 +166,7 @@ export class Table
             }
         }
         this.house.hand.push(this.deck.drawOne());
+        this.house.hand.push(this.deck.drawOne());
     }
 
     /*

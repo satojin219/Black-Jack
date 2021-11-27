@@ -137,6 +137,7 @@ export class Table {
             }
         }
         this.house.hand.push(this.deck.drawOne());
+        this.house.hand.push(this.deck.drawOne());
     }
     /*
        return null : テーブル内のすべてのプレイヤーの状態を更新し、手札を空の配列に、ベットを0に設定します。

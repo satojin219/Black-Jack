@@ -21,15 +21,22 @@
   <div class="modal  vh-100 d-flex  justify-content-center align-items-center">
     <div class="d-flex align-items-center col-lg-8 col-9 ">
       <div class="shadow-lg col-12 text-center p-5  rounded  bg-light">
-        <h2 class="">You Bet : $60</h2>
-        <p>Your Chips : $400</p>
+        <h2 class="" id="bet-target">You Bet : $60</h2>
+        <p id="chips-target">Your Chips : $400</p>
   
+        <div class="my-4 d-flex justify-content-around">
+       
+          <button type="button" class = "btn text-white text-center bg-warning px-4 py-3 rounded-circle rounded-lg shadow" id="btn-5">5</button>
+          <button type="button" class = "btn text-white text-center bg-warning px-4 py-3 rounded-circle rounded-lg shadow" id="btn-20">20</button>
+          <button type="button" class = "btn text-white text-center bg-warning px-4 py-3 rounded-circle rounded-lg shadow"  id="btn-50">50</button>
+          <button type="button" class = "btn text-white text-center bg-warning px-4 py-3 rounded-circle rounded-lg shadow" id="btn-100">100</button>
+      
+      </div>
   
-  
-        <button type="button" class="btn btn-success col-12 text-white  font-weight-bold rounded m-1"> <i class="fas fa-badge-dollar"></i> Deal  </button>
+        <button id="deal-btn" type="button" class="btn btn-success col-12 text-white  font-weight-bold rounded m-1"> <i class="fas fa-badge-dollar"></i> Deal  </button>
         
         <div class="d-flex justify-content-between ">
-        <button type="button" class="btn btn-danger col-6 text-white  font-weight-bold rounded m-1"><i class="fas fa-trash-alt"></i>  Reset  </button>
+        <button id="" type="button" class="btn btn-danger col-6 text-white  font-weight-bold rounded m-1"><i class="fas fa-trash-alt"></i>  Reset  </button>
         <button type="button" class="btn btn-primary col-6 text-white  font-weight-bold rounded m-1"><i class="far fa-coins"></i>  All In </button>
         </div>
       </div>

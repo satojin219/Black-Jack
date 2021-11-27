@@ -12,6 +12,7 @@ closeBtn.addEventListener('click', function() {
   modal.style.display = 'none';
   body.classList.remove("body-fixed")
 })
+
 const card = document.querySelectorAll(".card");
 const front = document.querySelectorAll(".front");
 const back = document.querySelectorAll(".back");
