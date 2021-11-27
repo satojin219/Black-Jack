@@ -20,16 +20,18 @@
 </head>
 
 <body>
+<div id="initial-form">
 
   <div class=" vh-100 d-flex  justify-content-center align-items-center">
     <div class="d-flex align-items-center col-lg-8 col-9 ">
       <div class="shadow-lg col-12 text-center p-4  rounded  ">
         <h2 class="text-white">Welcome to Card Game!</h2>
-        <div class="input-group my-4">
+
+        <div id="name-input" class="input-group my-4">
           <input type="text" class="form-control  input-group-prepend" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
         </div>
-
-        <div class="input-group my-4">
+        
+        <div id="game-type-select" class="input-group my-4">
           <div class="input-group-prepend">
             <label class="input-group-text bg-success text-white" for="inputGroupSelect01">GameType</label>
           </div>
@@ -40,10 +42,11 @@
           </select>
         </div>
 
-        <button type="button" class="btn btn-success col-12 text-white p-3 font-weight-bold rounded-pill"><i class="fas fa-spade text-dark"></i>  <i class="fas fa-club text-dark"></i> Game Start  <i class="fas fa-diamond text-danger"></i> <i class="fas fa-heart text-danger"></i></button>
+        <button id="start-btn" type="button" class="btn btn-success col-12 text-white p-3 font-weight-bold rounded-pill"><i class="fas fa-spade text-dark"></i>  <i class="fas fa-club text-dark"></i> Game Start  <i class="fas fa-diamond text-danger"></i> <i class="fas fa-heart text-danger"></i></button>
       </div>
     </div>
   </div>
+</div>
 
 
   <script src="main.js"></script>
