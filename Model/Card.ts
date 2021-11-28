@@ -11,16 +11,16 @@ export class Card
     {
         this.suit = suit;
         this.rank = rank;
-        this.isFront = false;
+        // this.isFront = false;
     }
     getRankNumber()
     {   
-        if(!this.isFront)return 0;
+        // if(!this.isFront)return 0;
         if(this.rank == "J" || this.rank =="Q" || this.rank =="K")return 10;
         else if(this.rank == "A")return 11;
         else return Number(this.rank);
     }
-    reverseCard(){
-        this.isFront = true;
-    }
+    // reverseCard(){
+    //     this.isFront = true;
+    // }
 }

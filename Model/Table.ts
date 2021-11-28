@@ -1,7 +1,7 @@
 import { Card } from "./card.js";
 import { Deck } from "./Deck.js";
 import { Player } from "./Player.js";
-
+import { GameDecision } from "./Player.js";
 export class Table
 {
     /*
@@ -69,7 +69,9 @@ export class Table
         //TODO: ここから挙動をコードしてください。
             player.bet = gameDecision["amount"];
             player.gameStatus = gameDecision["action"];
-         if(gameDecision["action"] == "hit"){
+            // if(this.gamePhase == "betting")player.chips -=player.bet;
+            if(player.isBlackJack())  player.gameStatus = "BlackJack";
+            else if(gameDecision["action"] == "hit"){
             player.gameStatus = "hit";
             player.hand.push(this.deck.drawOne());
             if(player.getHandScore() > 21){
@@ -92,8 +94,11 @@ export class Table
                     player.gameStatus = "bust";
                     player.chips -= player.bet;
                     player.winAmount -= player.bet;
+                    }else{
+                        player.gameStatus = "doubleStand"
                     }
-            }
+            }else player.gameStatus = "?";
+            
     }
 
     /*
@@ -166,7 +171,6 @@ export class Table
             }
         }
         this.house.hand.push(this.deck.drawOne());
-        this.house.hand.push(this.deck.drawOne());
     }
 
     /*
@@ -203,9 +207,8 @@ export class Table
         if(this.gamePhase == "betting"){
             if(this.onFirstPlayer())this.players.forEach(player => player.bet = 0);
         if(userData == undefined) userData = player.promptPlayer();
-        console.log(userData)
+ 
             this.evaluateMove(player, userData);
-            console.log(player)
             if(this.onLastPlayer()){
                 this.blackjackAssignPlayerHands();
                 this.gamePhase = "acting";
@@ -214,9 +217,7 @@ export class Table
             
             if(player.gameDecision["betAmount"] > 0){
                 userData = player.promptPlayer(); 
-                console.log(userData)
                 this.evaluateMove(player, userData);
-                console.log(player)
             } 
             if(this.allPlayerActionsResolved()) this.gamePhase = "evaluatingWinner";
 
@@ -224,7 +225,6 @@ export class Table
         }else if(this.gamePhase === "evaluatingWinner"){
            this.blackjackEvaluateAndGetRoundResults();
             this.gamePhase = "roundOver";
-            console.log(player)
 
         } else {
             console.log("haveTurn内のerror")
@@ -255,7 +255,7 @@ export class Table
     */
     allPlayerActionsResolved() :boolean{
         //TODO: ここから挙動をコードしてください。
-        let actions  :any= ["broken", "bust", "stand", "surrender","blackjack"];
+        let actions  :any= ["broken", "bust", "stand", "surrender","BlackJack"];
         for(let player of this.players){
            if(!actions.includes(player.gameStatus)) return false;
         }

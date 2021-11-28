@@ -234,11 +234,19 @@ div.card div.back{
   background-color:rgb(41, 117, 204);
 }
 
+.undifinde{
+  background-color: gray;
+  border-radius: 5px;
+}
 .hit{
   background-color: green;
   border-radius: 5px;
 }
 .double{
+  background-color: yellow;
+  border-radius: 5px;
+}
+.doubleStand{
   background-color: yellow;
   border-radius: 5px;
 }
@@ -254,7 +262,7 @@ div.card div.back{
   background-color: purple;
   border-radius: 5px;
 }
-.blackjack{
+.BlackJack{
   background-color: yellowgreen;
   border-radius: 5px;
 }

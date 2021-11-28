@@ -82,7 +82,7 @@ export class Player
     decideAction() : string{
         let action :string;
         if(this.isBlackJack()){
-            action = "blackjack";
+            action = "BlackJack";
         }else if(this.getHandScore() <= 17){
             let actions :string[] = ["hit"];
             if(this.chips > this.bet*2) actions = ["hit", "double"];
@@ -121,28 +121,29 @@ export class Player
     */
 
     getHandScore() :number{
-      let score :number= 0;
+      let handScore :number= 0;
       let aceCount :number = 0;
         //TODO: ここから挙動をコードしてください。
         for(let i =0; i < this.hand.length; i++){
           if(this.hand[i].rank == "A")aceCount++;
-          score +=this.hand[i].getRankNumber();
+          handScore +=this.hand[i].getRankNumber();
         };
-        if(score >= 21 && aceCount >= 1){
-          while(score >= 21 || aceCount > 0){
-            score -= 10;
+        if(handScore > 21 && aceCount > 0){
+          while(handScore > 21 && aceCount > 0){
+            handScore -= 10;
             aceCount--;
           }
         }
-        return score;
+        return handScore;
     }
 
+
     isBlackJack() :boolean{
-        return this.getHandScore() == 21 && this.hand.length == 2;
+        return this.getHandScore() === 21 && this.hand.length === 2;
     }
 }
 
-class GameDecision
+export class GameDecision
 {
     /*
        String action : プレイヤーのアクションの選択。（ブラックジャックでは、hit、standなど。）

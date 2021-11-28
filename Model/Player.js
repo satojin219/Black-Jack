@@ -53,7 +53,7 @@ export class Player {
     decideAction() {
         let action;
         if (this.isBlackJack()) {
-            action = "blackjack";
+            action = "BlackJack";
         }
         else if (this.getHandScore() <= 17) {
             let actions = ["hit"];
@@ -91,28 +91,28 @@ export class Player {
        合計が21を超える場合、手札の各エースについて、合計が21以下になるまで10を引きます。
     */
     getHandScore() {
-        let score = 0;
+        let handScore = 0;
         let aceCount = 0;
         //TODO: ここから挙動をコードしてください。
         for (let i = 0; i < this.hand.length; i++) {
             if (this.hand[i].rank == "A")
                 aceCount++;
-            score += this.hand[i].getRankNumber();
+            handScore += this.hand[i].getRankNumber();
         }
         ;
-        if (score >= 21 && aceCount >= 1) {
-            while (score >= 21 || aceCount > 0) {
-                score -= 10;
+        if (handScore > 21 && aceCount > 0) {
+            while (handScore > 21 && aceCount > 0) {
+                handScore -= 10;
                 aceCount--;
             }
         }
-        return score;
+        return handScore;
     }
     isBlackJack() {
-        return this.getHandScore() == 21 && this.hand.length == 2;
+        return this.getHandScore() === 21 && this.hand.length === 2;
     }
 }
-class GameDecision {
+export class GameDecision {
     constructor(action, amount) {
         // アクション
         this.action = action;

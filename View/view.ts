@@ -1,4 +1,6 @@
+import { Card } from '../Model/card.js';
 import { Player } from '../Model/Player.js';
+import { GameDecision } from '../Model/Player.js';
 import { Table } from '../Model/Table.js';
 import { Controller } from '../Controller/controller.js';
 
@@ -10,11 +12,49 @@ export class View{
     bettingModal: document.getElementById("betting-modal"),
     resultModal: document.getElementById("result-modal"),
   }
+
+  static suitMark:{[key: string]: string} = {
+    H: "&#9829", 
+    D: "&#9830",
+    C: "&#9827",
+    S: "&#9824"
+  }  
+
+  static fontAwsome:{[key: string]: string} ={
+    user :'<i class="fas fa-user"></i>',
+    ai :'<i class="fas fa-robot"></i>'
+  }
+
+
+
   public controller :Controller;
+  public table :Table;
   constructor(controller :Controller){
-    this.controller = controller;
+    this.controller = controller; 
+  }
+
+  public displayNone(ele :HTMLElement) :void{
+    ele.classList.remove("d-block");
+    ele.classList.add("d-none");
+    ele.innerHTML = "";
   }
   
+  public displayBlock(ele :HTMLElement) :void{
+    ele.classList.remove("d-none");
+    ele.classList.add("d-block");
+  }
+  
+  public toggleFixed(){
+    document.querySelector("body").classList.toggle("body-fixed");
+  }
+
+  public addUnselctableBtn(){
+    View.config.actingPage.querySelector(".wood").classList.add("unselectableBtn")
+  }
+  public removeUnselctableBtn(){
+    View.config.actingPage.querySelector(".wood").classList.remove("unselectableBtn")
+  }
+ 
   renderStartPage(){
     View.config.initialForm.innerHTML = `
     <div class=" vh-100 d-flex  justify-content-center align-items-center">
@@ -54,7 +94,63 @@ export class View{
     })
   }
 
+  renderCards(player:Player,target){
+    let cards :Card[] = player.hand;
+    
+    for(let i=0; i < cards.length; i++){
+      let div = document.createElement("div");
+      div.className = `${player.name}-card${i+1}`;
+
+        div.innerHTML +=`
+        <div class="card">
+        <div class="front">
+        <span>${cards[i].rank}${View.suitMark[cards[i].suit]}</span>${View.suitMark[cards[i].suit]}<span>${cards[i].rank}${View.suitMark[cards[i].suit]}</span></div>
+        <div class="back"></div>
+        </div>
+        `;
+        target.append(div);
+        const cardTarget = target.querySelector(`.${player.name}-card${i+1}`);
+        console.log(cardTarget)
+        const card = cardTarget.querySelector(".card");
+        if(cards[i].suit == "H" || cards[i].suit == "D") card.classList.add("suit-red");
+      }
+    return target; 
+  }
+
+  renderPlayer(players :Player[]){
+    let target = document.createElement("div");
+    target.classList.add("col-12","d-flex","jusfify-content-between","text-center");
+
+    for(let i =0; i < players.length;i++){
+      target.innerHTML += `
+      <div class = "d-flex justify-content-around align-items-center flex-column col-4 mb-150px">
+      <div class="text-white">
+          <h3>${View.fontAwsome[players[i].type]}
+          ${players[i].name}</h3>
+          <div class="d-md-flex">
+            <p id="${players[i].name}-score" class="mx-1 my-1 p-1">Score: ${players[i].getHandScore()}</p>
+            <p id="${players[i].name}-bet" class="mx-1 my-1 p-1 ">Bet: ${players[i].bet}</p>
+            <p id="${players[i].name}-chips" class="mx-1 my-1 p-1">Chips: ${players[i].chips}</p>
+          </div>
+          <p id="${players[i].name}-status" class="mx-1 my-1 font-weight-bold p-1 undifinde">${players[i].gameStatus}</p>
+        </div>
+
+        <div id="${players[i].name}-hand" class="d-flex justify-content-around align-items-center mt-2 col-9 col-lg-5 col-md-4">
+        
+        </div>
+        </div>
+        `;
+        let cardTarget = target.querySelector(`#${players[i].name}-hand`)
+        this.renderCards(players[i],cardTarget);
+
+        
+    }
+   return target;
+  }
+
   renderActingPage(){
+    const players = this.controller.table.players;
+    const house = this.controller.table.house;
     this.displayNone(View.config.initialForm);
     View.config.actingPage.innerHTML =`
 <button type="button" class="btn modal-btn" data-toggle="modal" data-target="#exampleModal">
@@ -78,142 +174,36 @@ export class View{
   <div class="d-flex justify-content-around align-items-center  flex-column text-center mb-200px mt-1 ">
     <div class="text-white">
       <h3><i class="fas fa-user-tie"></i> House</h3>
-      <p class="mx-1 my-1 p-1">Score: 0</p>
+      <p class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
       
     </div>
     
-    <div class="d-flex justify-content-around align-items-center mt-1 col-3  col-md-2">
-      <div>
-        <div class="card">
-          <div class="front"></div>
-          <div class="back"></div>
-        </div>
-      </div>
-      <div>
-        <div class="card">
-          <div class="front"></div>
-          <div class="back"></div>
-        </div>
-      </div>
-      
-      
-    </div>
-  </div>
-  
-  
-  
-  <div class="col-12 d-flex jusfify-content-between  text-center ">
-    
-    <div class="d-flex justify-content-around align-items-center  flex-column col-4 mb-150px" >
-      <div class="text-white">
-        <h3><i class="fas fa-robot"></i>
-          Bot 1</h3>
-          <div class="d-md-flex">
-            <p class="mx-1 my-1 p-1">Score: 0</p>
-            <p class="mx-1 my-1 p-1 ">Bet: 0</p>
-            <p class="mx-1 my-1 p-1">Chips: 0</p>
-          </div>
+    <div  id="house-cards-target" class="d-flex justify-content-around align-items-center mt-1 col-2 col-lg-1">
 
-          
-        </div>
         
-        <div class="d-flex justify-content-around align-items-center mt-2  col-9 col-lg-5 col-md-4">
-          <div>
-            <div class="card">
-              <div class="front"></div>
-              <div class="back"></div>
-            </div>
-          </div>
-          
-          <div>
-            <div class="card">
-              <div class="front"></div>
-              <div class="back"></div>
-            </div>
-          </div> 
-        </div>
+    </div>
+     
       </div>
       
       
-      <div class="d-flex justify-content-around align-items-center  flex-column text-center col-4 mb-150px">
-        <div class="text-white">
-          <h3><i class="fas fa-user faa-float animated"></i> Jin</h3>
-          <div class="d-md-flex">
-            <p class="mx-1 my-1 p-1">Score: 0</p>
-            <p class="mx-1 my-1 p-1">Bet: 0</p>
-            <p class="mx-1 my-1 p-1">Chips: 0</p>
-          </div>
-
-          
-        </div>
-        
-        <div class="d-flex justify-content-around align-items-center mt-2  col-9 col-lg-5 col-md-4">
-          
-          <div>
-            <div class="card">
-              <div class="front"></div>
-              <div class="back"></div>
-            </div>
-          </div>
-          <div>
-            <div class="card">
-              <div class="front"></div>
-              <div class="back"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="d-flex justify-content-around align-items-center  flex-column col-4 text-center mb-150px">
-        <div class="text-white">
-          <h3><i class="fas fa-robot"></i>
-            Bot 2</h3>
-<div class="d-md-flex">
-  <p class="mx-1 my-1 p-1">Score: 0</p>
-  <p class="mx-1 my-1 p-1">Bet: 0</p>
-  <p class="mx-1 my-1 p-1">Chips: 400</p>
-</div>
-
-
-</div>
-
-<div class="d-flex justify-content-around align-items-center mt-2  col-9 col-lg-5 col-md-4">
-  <div>
-    <div class="card">
-      <div class="front"></div>
-      <div class="back"></div>
-    </div>
-  </div>
-  
-  <div>
-    <div class="card">
-      <div class="front"></div>
-      <div class="back"></div>
     </div>
   </div>
 
-</div>
-</div>
-</div>
-
-</div>
-
-
-
+  <div id="players-target">
+  </div>
 
 <div class="wood d-flex  justify-content-center">
-  
   <div class="d-flex justify-content-around align-items-center  p-4 col-lg-9 col-10 " >
         
         <div class="d-flex flex-column">
-          <div href="#" class="btn-real-dent btn-blue" >
+          <div id="surrenderBtn" href="#" class="btn-real-dent btn-blue">
             <i class="fab fa-font-awesome-flag"></i>
           </div>
           <div class="text-white font-weight-bold text-center pt-2">SURRENDER</div>
         </div>
         
         <div class="d-flex flex-column">
-          <div href="#" class="btn-real-dent btn-red" >
+          <div id="standBtn" href="#" class="btn-real-dent btn-red">
             <i class="fas fa-swords"></i>
           </div>
           <div class="text-white font-weight-bold text-center pt-2">STAND</div>
@@ -222,14 +212,14 @@ export class View{
         
         
         <div class="d-flex flex-column ">
-          <div href="#" class="btn-real-dent btn-yellow" >
+          <div  id="doubleBtn" href="#" class="btn-real-dent btn-yellow">
             <i class="far fa-coins"></i>
           </div>
           <div class="text-white font-weight-bold text-center pt-2">DOUBLE</div>
         </div>
         
         <div class="d-flex flex-column">
-          <div href="#" class=" btn-real-dent btn-green" ">
+          <div id="hitBtn" href="#" class=" btn-real-dent btn-green ">
             <i class="fas fa-coin"></i>
           </div>
           <div class="text-white font-weight-bold text-center pt-2">HIT</div>
@@ -237,14 +227,35 @@ export class View{
         
       </div>
     </div>
+    `;
+
+    let cardTarget = View.config.actingPage.querySelector(`#house-cards-target`)
+    this.renderCards(house,cardTarget);
+    View.config.actingPage.querySelector("#players-target").append(this.renderPlayer(players))
+    const front = View.config.actingPage.querySelectorAll(".front");
+    const back = View.config.actingPage.querySelectorAll(".back");
+    setTimeout(()=>{
+      for(let i=0; i < front.length; i++){
+    
+        back[i].classList.add("back-rotate");
+        front[i].classList.add("front-rotate");
+      }
+    
+    },100);
 
     
-    `;
+    let actionList = ["surrender", "stand", "hit", "double"]
+    actionList.forEach(function(action){
+        let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
+        console.log(actionBtn)
+        actionBtn.addEventListener("click", ()=>{
+            // this.controller.decidePlayerAction(action);
+            // this.controller.renderTable(this.controller.table);
+        })
+    })
   }
 
   renderBettingModal(){
-    document.querySelector("body").classList.add("body-fixed");
-
     const userInfo = this.controller.table.players[1];
     let betAmount :number= userInfo.bet;
     let chipsAmount :number= userInfo.chips;
@@ -286,8 +297,7 @@ export class View{
 
     for(let i=0; i < betBtn.length;i++){
       betBtn[i].addEventListener("click",()=>{
-        console.log(betBtn[i].innerHTML)
-        if(chipsAmount < Number(betBtn[i].innerHTML)) return alert("これ以上賭けられません")
+        if(chipsAmount < Number(betBtn[i].innerHTML)) return;
         betAmount += Number(betBtn[i].innerHTML);
         chipsAmount -=Number(betBtn[i].innerHTML);
         this.renderChipsBetAmount(userBet,userChips,betAmount,chipsAmount);
@@ -310,26 +320,75 @@ export class View{
     });
 
     dealBtn.addEventListener("click",()=>{
+      if(betAmount == 0)return;
+      this.controller.evaluteBet(betAmount)
+      // this.controller.renderTable(this.controller.table);
 
     })
-
   }
+
   public renderChipsBetAmount(ele1,ele2,bet,chips){
     ele1.innerHTML = `You Bet : $${bet.toString()}`;
     ele2.innerHTML = `Your Chips : $${chips.toString()}`;
   }
 
+  updateUserInfo(player){
+    this.updateScore(player);
+    this.updateBet(player);
+    this.updateChips(player);
+    this.updateGameStatus(player)
+  }
 
-  public displayNone(ele :HTMLElement) :void{
-    ele.classList.remove("d-block");
-    ele.classList.add("d-none");
-    ele.innerHTML = "";
+  updateGameStatus(player){
+    let gameStatus = View.config.actingPage.querySelector(`#${player.name}-status`);
+    gameStatus.className= `mx-1 my-1 font-weight-bold p-1 ${player.gameStatus}`;
+    gameStatus.innerHTML = player.gameStatus;
   }
-  
-  public displayBlock(ele :HTMLElement) :void{
-    ele.classList.remove("d-none");
-    ele.classList.add("d-block");
+
+  updateScore(player){
+    let bet = View.config.actingPage.querySelector(`#${player.name}-score`);
+    bet.innerHTML = `Score: ${player.getHandScore()}`;
   }
+  updateBet(player){
+    let bet = View.config.actingPage.querySelector(`#${player.name}-bet`);
+    bet.innerHTML = `Bet: ${player.bet}`;
+  }
+  updateChips(player){
+    let chips = View.config.actingPage.querySelector(`#${player.name}-chips`);
+    chips.innerHTML = `Chips: ${player.chips}`;
+  }
+
+  addCard(player){
+    const target = View.config.actingPage.querySelector(`#${player.name}-hand`);
+
+    let cards = player.hand;
+    let cardIndex  = player.hand.length-1;
+
+      let div = document.createElement("div");
+      div.className = `${player.name}-card${cardIndex+1}`;
+        div.innerHTML +=`
+        <div class="card">
+        <div class="front">
+        <span>${cards[cardIndex].rank}${View.suitMark[cards[cardIndex].suit]}</span>${View.suitMark[cards[cardIndex].suit]}<span>${cards[cardIndex].rank}${View.suitMark[cards[cardIndex].suit]}</span></div>
+        <div class="back"></div>
+        </div>
+        `;
+      
+      target.append(div);
+    
+      const cardTarget = target.querySelector(`.${player.name}-card${cardIndex+1}`);
+      const card = cardTarget.querySelector(".card");
+      const front = cardTarget.querySelector(".front");
+      const back = cardTarget.querySelector(".back");
+      if(cards.suit == "H" || cards.suit == "D") card.classList.add("suit-red");
+      
+        setTimeout(()=>{ 
+            back.classList.add("back-rotate");
+            front.classList.add("front-rotate");
+          }
+        ,10);
+
+    }
   
 
 }
