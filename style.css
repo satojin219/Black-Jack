@@ -234,7 +234,7 @@ div.card div.back{
   background-color:rgb(41, 117, 204);
 }
 
-.undifinde{
+.undifined{
   background-color: gray;
   border-radius: 5px;
 }
@@ -243,11 +243,11 @@ div.card div.back{
   border-radius: 5px;
 }
 .double{
-  background-color: yellow;
+  background-color:  orange;
   border-radius: 5px;
 }
 .doubleStand{
-  background-color: yellow;
+  background-color: orange;
   border-radius: 5px;
 }
 .stand{

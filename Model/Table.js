@@ -36,16 +36,21 @@ export class Table {
         player.bet = gameDecision["amount"];
         player.gameStatus = gameDecision["action"];
         // if(this.gamePhase == "betting")player.chips -=player.bet;
-        if (player.isBlackJack())
+        if (player.getHandScore() > 21) {
+            player.gameStatus = "bust";
+            player.chips -= player.bet;
+            player.winAmount -= player.bet;
+        }
+        else if (player.isBlackJack())
             player.gameStatus = "BlackJack";
         else if (gameDecision["action"] == "hit") {
             player.gameStatus = "hit";
             player.hand.push(this.deck.drawOne());
-            if (player.getHandScore() > 21) {
-                player.gameStatus = "bust";
-                player.chips -= player.bet;
-                player.winAmount -= player.bet;
-            }
+            // if(player.getHandScore() > 21){
+            //     player.gameStatus = "bust";
+            //     player.chips -= player.bet;
+            //     player.winAmount -= player.bet;
+            //     }
         }
         else if (gameDecision["action"] == "stand") {
             player.gameStatus = "stand";
@@ -60,17 +65,17 @@ export class Table {
             player.gameStatus = "double";
             player.bet *= 2;
             player.hand.push(this.deck.drawOne());
-            if (player.getHandScore() > 21) {
-                player.gameStatus = "bust";
-                player.chips -= player.bet;
-                player.winAmount -= player.bet;
-            }
-            else {
-                player.gameStatus = "doubleStand";
-            }
+            // if(player.getHandScore() > 21){
+            //     player.gameStatus = "bust";
+            //     player.chips -= player.bet;
+            //     player.winAmount -= player.bet;
+            //     }else{
+            //         player.gameStatus = "doubleStand";
+            //     }
         }
         else
-            player.gameStatus = "?";
+            player.gameStatus = "undifined";
+        player.gameDecision["action"] = player.gameStatus;
     }
     /*
        return String : 新しいターンが始まる直前の全プレイヤーの状態を表す文字列。

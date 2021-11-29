@@ -83,14 +83,16 @@ export class Player
         let action :string;
         if(this.isBlackJack()){
             action = "BlackJack";
-        }else if(this.getHandScore() <= 17){
+        }else if(this.getHandScore() < 16){
             let actions :string[] = ["hit"];
-            if(this.chips > this.bet*2) actions = ["hit", "double"];
+            if(this.chips > this.bet*2 && this.gameStatus != "hit") actions = ["hit", "double"];
         let index :number= Player.getRandomInteger(actions.length,0);
         action = actions[index];
-        }else{
+        }
+        else{
             action = "stand";
         }
+      
         return action;
     }
     //  return Number 賭ける額
@@ -121,25 +123,30 @@ export class Player
     */
 
     getHandScore() :number{
-      let handScore :number= 0;
+
+      let handScore :number = 0;
       let aceCount :number = 0;
-        //TODO: ここから挙動をコードしてください。
-        for(let i =0; i < this.hand.length; i++){
-          if(this.hand[i].rank == "A")aceCount++;
-          handScore +=this.hand[i].getRankNumber();
-        };
-        if(handScore > 21 && aceCount > 0){
-          while(handScore > 21 && aceCount > 0){
+        for(let card of this.hand){
+            handScore +=card.getRankNumber();
+            aceCount = card.rank == "A" ? aceCount+1 : aceCount;
+        }
+   
+          while(handScore > 21 && aceCount >= 1){
             handScore -= 10;
             aceCount--;
           }
-        }
+        
         return handScore;
     }
 
 
     isBlackJack() :boolean{
-        return this.getHandScore() === 21 && this.hand.length === 2;
+        let count = 0;
+        for(let card of this.hand){
+            if(card.rank ==="K" || card.rank ==="Q" || card.rank ==="J")count++;
+        }
+
+        return this.getHandScore() === 21 && this.hand.length === 2 && count == 1;
     }
 }
 

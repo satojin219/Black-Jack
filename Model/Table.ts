@@ -68,17 +68,24 @@ export class Table
     evaluateMove(player :Player, gameDecision) :void{
         //TODO: ここから挙動をコードしてください。
             player.bet = gameDecision["amount"];
-            player.gameStatus = gameDecision["action"];
+
+                player.gameStatus = gameDecision["action"];
+            
             // if(this.gamePhase == "betting")player.chips -=player.bet;
-            if(player.isBlackJack())  player.gameStatus = "BlackJack";
-            else if(gameDecision["action"] == "hit"){
-            player.gameStatus = "hit";
-            player.hand.push(this.deck.drawOne());
             if(player.getHandScore() > 21){
                 player.gameStatus = "bust";
                 player.chips -= player.bet;
                 player.winAmount -= player.bet;
-                }
+            } 
+            else if(player.isBlackJack())  player.gameStatus = "BlackJack";
+            else if(gameDecision["action"] == "hit"){
+            player.gameStatus = "hit";
+            player.hand.push(this.deck.drawOne());
+            // if(player.getHandScore() > 21){
+            //     player.gameStatus = "bust";
+            //     player.chips -= player.bet;
+            //     player.winAmount -= player.bet;
+            //     }
             }else if(gameDecision["action"] == "stand"){
                 player.gameStatus = "stand";
             }else if(gameDecision["action"] == "surrender"){
@@ -90,14 +97,15 @@ export class Table
                 player.gameStatus = "double";
                 player.bet *= 2;
                 player.hand.push(this.deck.drawOne());
-                if(player.getHandScore() > 21){
-                    player.gameStatus = "bust";
-                    player.chips -= player.bet;
-                    player.winAmount -= player.bet;
-                    }else{
-                        player.gameStatus = "doubleStand"
-                    }
-            }else player.gameStatus = "?";
+                // if(player.getHandScore() > 21){
+                //     player.gameStatus = "bust";
+                //     player.chips -= player.bet;
+                //     player.winAmount -= player.bet;
+                //     }else{
+                //         player.gameStatus = "doubleStand";
+                //     }
+            }else player.gameStatus = "undifined";
+            player.gameDecision["action"] = player.gameStatus;
             
     }
 

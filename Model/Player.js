@@ -55,9 +55,9 @@ export class Player {
         if (this.isBlackJack()) {
             action = "BlackJack";
         }
-        else if (this.getHandScore() <= 17) {
+        else if (this.getHandScore() < 16) {
             let actions = ["hit"];
-            if (this.chips > this.bet * 2)
+            if (this.chips > this.bet * 2 && this.gameStatus != "hit")
                 actions = ["hit", "double"];
             let index = Player.getRandomInteger(actions.length, 0);
             action = actions[index];
@@ -93,23 +93,23 @@ export class Player {
     getHandScore() {
         let handScore = 0;
         let aceCount = 0;
-        //TODO: ここから挙動をコードしてください。
-        for (let i = 0; i < this.hand.length; i++) {
-            if (this.hand[i].rank == "A")
-                aceCount++;
-            handScore += this.hand[i].getRankNumber();
+        for (let card of this.hand) {
+            handScore += card.getRankNumber();
+            aceCount = card.rank == "A" ? aceCount + 1 : aceCount;
         }
-        ;
-        if (handScore > 21 && aceCount > 0) {
-            while (handScore > 21 && aceCount > 0) {
-                handScore -= 10;
-                aceCount--;
-            }
+        while (handScore > 21 && aceCount >= 1) {
+            handScore -= 10;
+            aceCount--;
         }
         return handScore;
     }
     isBlackJack() {
-        return this.getHandScore() === 21 && this.hand.length === 2;
+        let count = 0;
+        for (let card of this.hand) {
+            if (card.rank === "K" || card.rank === "Q" || card.rank === "J")
+                count++;
+        }
+        return this.getHandScore() === 21 && this.hand.length === 2 && count == 1;
     }
 }
 export class GameDecision {

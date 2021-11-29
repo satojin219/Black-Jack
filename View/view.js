@@ -72,7 +72,6 @@ export class View {
         `;
             target.append(div);
             const cardTarget = target.querySelector(`.${player.name}-card${i + 1}`);
-            console.log(cardTarget);
             const card = cardTarget.querySelector(".card");
             if (cards[i].suit == "H" || cards[i].suit == "D")
                 card.classList.add("suit-red");
@@ -93,7 +92,7 @@ export class View {
             <p id="${players[i].name}-bet" class="mx-1 my-1 p-1 ">Bet: ${players[i].bet}</p>
             <p id="${players[i].name}-chips" class="mx-1 my-1 p-1">Chips: ${players[i].chips}</p>
           </div>
-          <p id="${players[i].name}-status" class="mx-1 my-1 font-weight-bold p-1 undifinde">${players[i].gameStatus}</p>
+          <p id="${players[i].name}-status" class="mx-1 my-1 font-weight-bold p-1 ${players[i].gameStatus}">${players[i].gameStatus}</p>
         </div>
 
         <div id="${players[i].name}-hand" class="d-flex justify-content-around align-items-center mt-2 col-9 col-lg-5 col-md-4">
@@ -200,10 +199,8 @@ export class View {
         let actionList = ["surrender", "stand", "hit", "double"];
         actionList.forEach(function (action) {
             let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
-            console.log(actionBtn);
             actionBtn.addEventListener("click", () => {
-                // this.controller.decidePlayerAction(action);
-                // this.controller.renderTable(this.controller.table);
+                this.controller.decidePlayerAction(action);
             });
         });
     }
@@ -281,8 +278,8 @@ export class View {
     }
     updateGameStatus(player) {
         let gameStatus = View.config.actingPage.querySelector(`#${player.name}-status`);
-        gameStatus.className = `mx-1 my-1 font-weight-bold p-1 ${player.gameStatus}`;
-        gameStatus.innerHTML = player.gameStatus;
+        gameStatus.className = `mx-1 my-1 font-weight-bold p-1 ${player.gameDecision["action"]}`;
+        gameStatus.innerHTML = player.gameDecision["action"];
     }
     updateScore(player) {
         let bet = View.config.actingPage.querySelector(`#${player.name}-score`);

@@ -11,6 +11,6 @@ export class Card {
         else if (this.rank == "A")
             return 11;
         else
-            return Number(this.rank);
+            return parseInt(this.rank);
     }
 }

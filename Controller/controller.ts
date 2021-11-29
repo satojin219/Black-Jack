@@ -34,53 +34,65 @@ export class Controller{
     this.view.displayNone(View.config.bettingModal);
     this.view.toggleFixed();
     this.view.renderActingPage();
+    // for(let player of this.table.players){
+    //   this.view.updateUserInfo(player);
+    // }
     this.view.addUnselctableBtn();
     this.decidePlayerAction();
   }
 
 
 
-  renderAIAction(player){
-    // this.view.updateUserInfo(player);
-    let actions  :any= ["broken", "bust", "stand","doubleStand", "surrender","BlackJack"];
-    console.log(player);
-    if(actions.includes(player.gameStatus)){
-      return this.view.updateUserInfo(player);
-    };
-    setTimeout(()=>{
-      if( player.gameStatus == "double" || player.gameStatus == "hit" ){
+  renderAIAction(player,action?){
+
+    let userData = player.promptPlayer();
+
+    // this.view.updateUserInfo(player);   
+    this.table.evaluateMove(player, userData);
+    if(player.gameDecision["action"] == "hit"){
+        this.view.updateUserInfo(player);   
         this.view.addCard(player);
-
-        let userData = player.promptPlayer();
-        console.log(userData);
-        console.log(player);
-        this.table.evaluateMove(player, userData);
-        
- } 
-    this.view.updateUserInfo(player);
-
-    return this.renderAIAction(player);
-
-    },500);
-    
+        setTimeout(()=>{
+        return this.renderAIAction(player);
+    },1000);
+    }else if(player.gameDecision["action"] == "double"){
+      this.view.updateUserInfo(player);   
+      this.view.addCard(player);
+      setTimeout(()=>{
+        this.view.updateUserInfo(player);
+        return this.decidePlayerAction();
+    },500); 
+    }else{
+      let actions  :any= ["broken", "bust", "stand","doubleStand", "surrender","BlackJack"];
+      if(actions.includes(player.gameStatus)){
+        setTimeout(()=>{
+          this.view.updateUserInfo(player);
+          return this.decidePlayerAction();
+      },500);
+      }
+    }    
 }
 
   decidePlayerAction(action? :string){
     if(this.table.allPlayerActionsResolved()) return;
-
     let player = this.table.getTurnPlayer();
+    console.log(player);
+
     if(player.type == "user"){
-      this.view.removeUnselctableBtn();
-      this.haveTurn();
+      setTimeout(()=>{
+        this.view.removeUnselctableBtn();
+      },1000);
+      return;
+      
     }else{
       setTimeout(()=>{
-        this.haveTurn();
+        this.view.updateUserInfo(player)
         this.renderAIAction(player);
       
       },2000);
       // return this.decidePlayerAction();
     }
-    
+    this.table.turnCounter++;
       
   }
 
@@ -105,7 +117,6 @@ export class Controller{
         }else if(this.table.gamePhase == "acting"){
         if(player.gameDecision["betAmount"] > 0){
           if(userData == undefined) userData = player.promptPlayer();
-          console.log(userData);
             this.table.evaluateMove(player, userData);
        
         } 
@@ -115,7 +126,7 @@ export class Controller{
     }else if(this.table.gamePhase === "evaluatingWinner"){
        this.table.blackjackEvaluateAndGetRoundResults();
         this.table.gamePhase = "roundOver";
-        console.log(player)
+     
 
     } else {
         console.log("haveTurn内のerror")

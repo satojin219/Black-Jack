@@ -16,9 +16,9 @@ export class Card
     getRankNumber()
     {   
         // if(!this.isFront)return 0;
-        if(this.rank == "J" || this.rank =="Q" || this.rank =="K")return 10;
+        if(this.rank == "J" || this.rank == "Q" || this.rank =="K")return 10;
         else if(this.rank == "A")return 11;
-        else return Number(this.rank);
+        else return parseInt(this.rank);
     }
     // reverseCard(){
     //     this.isFront = true;
