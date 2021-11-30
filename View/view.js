@@ -1,6 +1,7 @@
 export class View {
-    constructor(controller) {
+    constructor(controller, table) {
         this.controller = controller;
+        this.table = table;
     }
     displayNone(ele) {
         ele.classList.remove("d-block");
@@ -133,6 +134,7 @@ export class View {
     <div class="text-white">
       <h3><i class="fas fa-user-tie"></i> House</h3>
       <p class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
+
       
     </div>
     
@@ -197,11 +199,13 @@ export class View {
                 front[i].classList.add("front-rotate");
             }
         }, 100);
+        const controller = this.controller;
+        const table = this.table;
         let actionList = ["surrender", "stand", "hit", "double"];
         actionList.forEach(function (action) {
             let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
             actionBtn.addEventListener("click", () => {
-                console.log(this.controller);
+                controller.renderAIAction(table.players[1], action);
                 // this.controller.renderAIAction(action);
             });
         });

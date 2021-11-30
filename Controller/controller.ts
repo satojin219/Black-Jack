@@ -7,15 +7,16 @@ export class Controller{
   view :View;
   table :Table|null;
   constructor(){
-    this.view = new View(this);
-    this.view.renderStartPage();
     this.table = null;
+    this.view = new View(this,this.table);
+    this.view.renderStartPage();
   }
 
   startGame(gameType :string,userName :string){
     if(userName == "") this.table = new Table(gameType,"Bot3","ai");
     else  this.table = new Table(gameType,userName,"user");
-    console.log(this.table)
+    this.view = new View(this,this.table);
+
     // bettingページへ移行する
     this.view.displayNone(View.config.initialForm);
     this.view.toggleFixed();
@@ -45,12 +46,14 @@ export class Controller{
 
   renderAIAction(player,action?){
 
-    let userData = player.promptPlayer();
+    let userData;
     if(player.type == "user"){
       let userDecision = {
         "action": action,
         "bet": player.bet
       }
+      userData = player.promptPlayer(userDecision);
+    }else{
       userData = player.promptPlayer();
     }
 
@@ -63,7 +66,6 @@ export class Controller{
         return this.renderAIAction(player);
     },1000);
     }else if(player.gameDecision["action"] == "double"){
-      console.log(player)
       this.view.updateUserInfo(player);   
       this.view.addCard(player);
       setTimeout(()=>{
@@ -82,19 +84,20 @@ export class Controller{
     }    
 }
 
-  decidePlayerAction(action? :string){
-    if(this.table.allPlayerActionsResolved()) return;
+  decidePlayerAction(){
+    // 全てのプレイヤーの行動が終わったらhaveTurnでフェーズを切り替える。
+    if(this.table.allPlayerActionsResolved()) return this.haveTurn();
     let player = this.table.getTurnPlayer();
-    console.log(player);
 
-    if(player.type == "user"){
+    if(player.type === "user"){
       setTimeout(()=>{
         this.view.removeUnselctableBtn();
       },1000);
-      return;
+      
       
     }else{
       setTimeout(()=>{
+        
         this.view.updateUserInfo(player)
         this.renderAIAction(player);
       
@@ -122,14 +125,19 @@ export class Controller{
       
         if(this.table.onLastPlayer()){
             this.table.gamePhase = "acting";
+           
         }
         }else if(this.table.gamePhase == "acting"){
-        if(player.gameDecision["betAmount"] > 0){
-          if(userData == undefined) userData = player.promptPlayer();
-            this.table.evaluateMove(player, userData);
+        // if(player.gameDecision["betAmount"] > 0){
+        //   if(userData == undefined) userData = player.promptPlayer();
+        //     this.table.evaluateMove(player, userData);
        
+        // } 
+        if(this.table.allPlayerActionsResolved()){
+          console.log("user action finish!")
+          this.table.gamePhase = "evaluatingWinner";
+          console.log(this.table.gamePhase);
         } 
-        if(this.table.allPlayerActionsResolved()) this.table.gamePhase = "evaluatingWinner";
 
  
     }else if(this.table.gamePhase === "evaluatingWinner"){

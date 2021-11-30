@@ -30,21 +30,19 @@ export class Player {
     }
     promptPlayer(userData) {
         //TODO: ここから挙動をコードしてください。
-        let action;
-        let betAmount;
         if (this.type == "user") {
-            action = userData["action"];
-            betAmount = userData["bet"];
+            this.gameDecision["action"] = userData["action"];
+            this.gameDecision["betAmount"] = userData["bet"];
         }
         else {
             // AIの場合
             if (this.gameStatus == "betting") {
-                betAmount = this.decideBetAmount();
-                this.gameDecision["betAmount"] = betAmount;
+                this.gameDecision["betAmount"] = this.decideBetAmount();
+                ;
             }
             else if (this.gameDecision["betAmount"] > 0) {
-                action = this.decideAction();
-                this.gameDecision["action"] = action;
+                this.gameDecision["action"] = this.decideAction();
+                ;
             }
         }
         return new GameDecision(this.gameDecision["action"], this.gameDecision["betAmount"]);
@@ -55,12 +53,13 @@ export class Player {
         if (this.isBlackJack()) {
             action = "BlackJack";
         }
-        else if (this.getHandScore() < 20) {
-            // let actions :string[] = ["hit"];
-            let actions = ["double"];
-            // if(this.chips > this.bet*2 && this.gameStatus != "hit") actions = ["hit", "double"];
-            // let index :number= Player.getRandomInteger(actions.length,0);
-            // action = actions[index];
+        else if (this.getHandScore() < 17) {
+            let actions = ["hit"];
+            // let actions :string[] = ["double"];
+            if (this.chips > this.bet * 2 && this.gameStatus != "hit")
+                actions = ["hit", "double"];
+            let index = Player.getRandomInteger(actions.length, 0);
+            action = actions[index];
             action = actions[0];
         }
         else {

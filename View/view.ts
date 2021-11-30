@@ -6,6 +6,14 @@ import { Controller } from '../Controller/controller.js';
 
 export class View{
 
+  public controller :Controller;
+  public table :Table;
+
+  constructor(controller :Controller,table :Table){
+    this.controller = controller;
+    this.table = table; 
+  }
+
   static config :{[key: string] :HTMLElement}= {
     initialForm: document.getElementById("initial-form"),
     actingPage: document.getElementById("acting-page"),
@@ -27,12 +35,6 @@ export class View{
 
 
 
-  public controller :Controller;
-  public table :Table;
-
-  constructor(controller :Controller){
-    this.controller = controller; 
-  }
 
   public displayNone(ele :HTMLElement) :void{
     ele.classList.remove("d-block");
@@ -173,6 +175,7 @@ export class View{
     <div class="text-white">
       <h3><i class="fas fa-user-tie"></i> House</h3>
       <p class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
+
       
     </div>
     
@@ -241,12 +244,13 @@ export class View{
     
     },100);
 
-    
+    const controller = this.controller;
+    const table = this.table;
     let actionList = ["surrender", "stand", "hit", "double"]
     actionList.forEach(function(action){
         let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
         actionBtn.addEventListener("click", ()=>{
-          console.log(this.controller)
+          controller.renderAIAction(table.players[1],action);
           // this.controller.renderAIAction(action);
         })
     })
