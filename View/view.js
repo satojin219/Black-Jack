@@ -166,6 +166,7 @@ export class View {
     renderActingPage() {
         const players = this.controller.table.players;
         const house = this.controller.table.house;
+        console.log(house);
         this.displayNone(View.config.initialForm);
         View.config.actingPage.innerHTML = `
 <button type="button" class="btn modal-btn" data-toggle="modal" data-target="#exampleModal">
@@ -186,11 +187,12 @@ export class View {
 
   <div class="d-flex justify-content-around align-items-center  flex-column text-center mb-200px mt-1 ">
     <div class="text-white">
-      <h3><i class="fas fa-user-tie"></i> House</h3>
-      <p class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
+      <h3 id="house"><i class="fas fa-user-tie"></i> House</h3>
+      <p id ="house-score" class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
+      <p id="${house.name}-status" class="mx-1 my-1 font-weight-bold p-1 ${house.gameStatus}">${house.gameStatus}</p>
     </div>
     
-    <div  id="house-cards-target" class="d-flex justify-content-around align-items-center mt-1 col-2 col-lg-1">
+    <div  id="house-hand" class="d-flex justify-content-around align-items-center mt-1 col-2 col-lg-1">
     </div>
   </div>    
 </div>
@@ -235,7 +237,7 @@ export class View {
       </div>
     </div>
     `;
-        let cardTarget = View.config.actingPage.querySelector(`#house-cards-target`);
+        let cardTarget = View.config.actingPage.querySelector(`#house-hand`);
         this.renderCards(house, cardTarget);
         View.config.actingPage.querySelector("#players-target").append(this.renderPlayer(players));
         const front = View.config.actingPage.querySelectorAll(".front");
@@ -252,8 +254,7 @@ export class View {
         actionList.forEach(function (action) {
             let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
             actionBtn.addEventListener("click", () => {
-                controller.renderAIAction(table.players[1], action);
-                // this.controller.renderAIAction(action);
+                controller.renderPlayerAction(table.players[1], action);
             });
         });
     }

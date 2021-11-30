@@ -101,9 +101,18 @@ export class Table
                 //     }else{
                 //         player.gameStatus = "doubleStand";
                 //     }
-            }else player.gameStatus = "undifined";
+            }else player.gameStatus = "bet";
             player.gameDecision["action"] = player.gameStatus;
             
+    }
+
+    houseGetHand(){
+
+        let houseHandeScore :number = this.house.getHandScore();
+        
+        this.house.hand.push(this.deck.drawOne());
+        
+        this.house.gameStatus = houseHandeScore > 21 ? "bust" : this.house.isBlackJack() ? "blackjack" : "hit";
     }
 
     /*
@@ -114,7 +123,7 @@ export class Table
         //TODO: ここから挙動をコードしてください。
 
         // 全てのプレイヤーの行動が終了したのでハウスも17になるまでカードを引く
-        while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
+        // while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
         let houseHandeScore :number = this.house.getHandScore();
         this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
 
@@ -175,6 +184,7 @@ export class Table
                 player.hand.push(this.deck.drawOne()); 
             }
         }
+        this.house.gameStatus = "waiting";
         this.house.hand.push(this.deck.drawOne());
     }
 
@@ -183,7 +193,7 @@ export class Table
     */
     blackjackClearPlayerHandsAndBets(){
         //TODO: ここから挙動をコードしてください。
-        this.house.gameStatus = "betting";
+        this.house.gameStatus = "waiting";
         this.house.hand = [];
         this.players.forEach(player =>{
             player.gameStatus = player.chips > 0 ? 'betting' : 'gameOver';
@@ -260,7 +270,7 @@ export class Table
     */
     allPlayerActionsResolved() :boolean{
         //TODO: ここから挙動をコードしてください。
-        let actions  :any= ["broken", "bust", "stand", "surrender","BlackJack"];
+        let actions  :any= ["broken", "bust", "stand","double", "surrender","BlackJack"];
         for(let player of this.players){
            if(!actions.includes(player.gameStatus)) return false;
         }

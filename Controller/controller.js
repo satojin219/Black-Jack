@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { GameDecision } from '../Model/Player.js';
 import { Table } from '../Model/Table.js';
 import { View } from '../View/view.js';
@@ -34,7 +43,7 @@ export class Controller {
         // }
         this.decidePlayerAction();
     }
-    renderAIAction(player, action) {
+    renderPlayerAction(player, action) {
         let userData;
         if (player.type == "user") {
             let userDecision = {
@@ -46,7 +55,6 @@ export class Controller {
         else {
             userData = player.promptPlayer();
         }
-        // this.view.updateUserInfo(player);   
         this.table.evaluateMove(player, userData);
         if (player.gameDecision["action"] == "hit") {
             this.view.addUnselctableBtn("surrender");
@@ -54,10 +62,11 @@ export class Controller {
             this.view.updateUserInfo(player);
             this.view.addCard(player);
             setTimeout(() => {
-                return this.renderAIAction(player);
+                return this.renderPlayerAction(player);
             }, 1000);
         }
         else if (player.gameDecision["action"] == "double") {
+            this.view.addAllUnselctableBtn();
             this.view.updateUserInfo(player);
             this.view.addCard(player);
             setTimeout(() => {
@@ -69,38 +78,67 @@ export class Controller {
             }, 1000);
         }
         else {
-            let actions = ["broken", "bust", "stand", "doubleStand", "surrender", "BlackJack"];
+            let actions = ["broken", "bust", "stand", "double", "surrender", "BlackJack"];
             if (actions.includes(player.gameStatus)) {
                 setTimeout(() => {
                     this.view.updateUserInfo(player);
                     this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
                     return this.decidePlayerAction();
-                }, 500);
+                }, 1000);
             }
         }
     }
     decidePlayerAction() {
-        // 全てのプレイヤーの行動が終わったらhaveTurnでフェーズを切り替える。
-        if (this.table.allPlayerActionsResolved())
-            return this.haveTurn();
+        // 全てのプレイヤーの行動が終わったらrenderHouseAction()でフェーズを切り替える。
+        if (this.table.allPlayerActionsResolved()) {
+            setTimeout(() => {
+                this.haveTurn();
+                this.view.currentPlayer(View.config["actingPage"].querySelector("#house"));
+                this.renderHouseAction();
+            }, 1000);
+            return;
+        }
         let player = this.table.getTurnPlayer();
         this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
         if (player.type === "user") {
+            if (player.gameStatus == "blackjack") {
+                this.table.turnCounter++;
+                this.renderPlayerAction(player);
+                return;
+            }
             this.view.removeAllUnselctableBtn();
-            setTimeout(() => {
-            }, 1000);
         }
         else {
             this.view.addAllUnselctableBtn();
             setTimeout(() => {
                 this.view.updateUserInfo(player);
-                this.renderAIAction(player);
+                this.renderPlayerAction(player);
             }, 2000);
         }
         this.table.turnCounter++;
+        console.log(this.table.turnCounter);
+    }
+    renderHouseAction() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.table.houseGetHand();
+            yield this.view.addCard(this.table.house);
+            yield this.view.updateScore(this.table.house);
+            yield this.view.updateGameStatus(this.table.house);
+            if (this.table.house.getHandScore() < 17) {
+                yield setTimeout(() => {
+                    return this.renderHouseAction();
+                }, 2000);
+            }
+            else {
+                console.log(this.table.house.gameStatus);
+                this.haveTurn();
+                this.view.updateGameStatus(this.table.house);
+            }
+        });
     }
     haveTurn(userData) {
         const player = this.table.getTurnPlayer();
+        console.log(this.table.gamePhase);
         if (this.table.gamePhase == "betting") {
             if (this.table.onFirstPlayer()) {
                 // betを初期化し、カードをプレイヤーに配る
@@ -121,14 +159,14 @@ export class Controller {
             //     this.table.evaluateMove(player, userData);
             // } 
             if (this.table.allPlayerActionsResolved()) {
-                console.log("user action finish!");
                 this.table.gamePhase = "evaluatingWinner";
-                console.log(this.table.gamePhase);
+                console.log("houseTurn");
             }
         }
         else if (this.table.gamePhase === "evaluatingWinner") {
             this.table.blackjackEvaluateAndGetRoundResults();
             this.table.gamePhase = "roundOver";
+            console.log(this.table.resultsLog);
         }
         else {
             console.log("haveTurn内のerror");

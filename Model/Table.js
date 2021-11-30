@@ -75,8 +75,13 @@ export class Table {
             //     }
         }
         else
-            player.gameStatus = "undifined";
+            player.gameStatus = "bet";
         player.gameDecision["action"] = player.gameStatus;
+    }
+    houseGetHand() {
+        let houseHandeScore = this.house.getHandScore();
+        this.house.hand.push(this.deck.drawOne());
+        this.house.gameStatus = houseHandeScore > 21 ? "bust" : this.house.isBlackJack() ? "blackjack" : "hit";
     }
     /*
        return String : 新しいターンが始まる直前の全プレイヤーの状態を表す文字列。
@@ -85,8 +90,7 @@ export class Table {
     blackjackEvaluateAndGetRoundResults() {
         //TODO: ここから挙動をコードしてください。
         // 全てのプレイヤーの行動が終了したのでハウスも17になるまでカードを引く
-        while (this.house.getHandScore() < 17)
-            this.house.hand.push(this.deck.drawOne());
+        // while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
         let houseHandeScore = this.house.getHandScore();
         this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
         this.resultsLog.push(`Round: ${this.roundCounter}`);
@@ -150,6 +154,7 @@ export class Table {
                 player.hand.push(this.deck.drawOne());
             }
         }
+        this.house.gameStatus = "waiting";
         this.house.hand.push(this.deck.drawOne());
     }
     /*
@@ -157,7 +162,7 @@ export class Table {
     */
     blackjackClearPlayerHandsAndBets() {
         //TODO: ここから挙動をコードしてください。
-        this.house.gameStatus = "betting";
+        this.house.gameStatus = "waiting";
         this.house.hand = [];
         this.players.forEach(player => {
             player.gameStatus = player.chips > 0 ? 'betting' : 'gameOver';
@@ -228,7 +233,7 @@ export class Table {
     */
     allPlayerActionsResolved() {
         //TODO: ここから挙動をコードしてください。
-        let actions = ["broken", "bust", "stand", "surrender", "BlackJack"];
+        let actions = ["broken", "bust", "stand", "double", "surrender", "BlackJack"];
         for (let player of this.players) {
             if (!actions.includes(player.gameStatus))
                 return false;
