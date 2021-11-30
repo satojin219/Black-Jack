@@ -55,12 +55,13 @@ export class Player {
         if (this.isBlackJack()) {
             action = "BlackJack";
         }
-        else if (this.getHandScore() < 16) {
-            let actions = ["hit"];
-            if (this.chips > this.bet * 2 && this.gameStatus != "hit")
-                actions = ["hit", "double"];
-            let index = Player.getRandomInteger(actions.length, 0);
-            action = actions[index];
+        else if (this.getHandScore() < 20) {
+            // let actions :string[] = ["hit"];
+            let actions = ["double"];
+            // if(this.chips > this.bet*2 && this.gameStatus != "hit") actions = ["hit", "double"];
+            // let index :number= Player.getRandomInteger(actions.length,0);
+            // action = actions[index];
+            action = actions[0];
         }
         else {
             action = "stand";

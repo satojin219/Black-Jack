@@ -55,6 +55,7 @@ export class View {
                 return alert("ゲームを選択してください");
             if (userName.value == "Bot1" || userName.value == "Bot2")
                 return alert("その名前は使う事ができません");
+            console.log(this.controller);
             return this.controller.startGame(gameType.value, userName.value);
         });
     }
@@ -200,7 +201,8 @@ export class View {
         actionList.forEach(function (action) {
             let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
             actionBtn.addEventListener("click", () => {
-                this.controller.decidePlayerAction(action);
+                console.log(this.controller);
+                // this.controller.renderAIAction(action);
             });
         });
     }
@@ -278,8 +280,11 @@ export class View {
     }
     updateGameStatus(player) {
         let gameStatus = View.config.actingPage.querySelector(`#${player.name}-status`);
-        gameStatus.className = `mx-1 my-1 font-weight-bold p-1 ${player.gameDecision["action"]}`;
-        gameStatus.innerHTML = player.gameDecision["action"];
+        gameStatus.className = `mx-1 my-1 font-weight-bold p-1 ${player.gameStatus}`;
+        gameStatus.innerHTML = player.gameStatus;
+        // let gameStatus = View.config.actingPage.querySelector(`#${player.name}-status`);
+        // gameStatus.className= `mx-1 my-1 font-weight-bold p-1 ${player.gameDecision["action"]}`;
+        // gameStatus.innerHTML = player.gameDecision["action"];
     }
     updateScore(player) {
         let bet = View.config.actingPage.querySelector(`#${player.name}-score`);

@@ -40,6 +40,7 @@ export class Table {
             player.gameStatus = "bust";
             player.chips -= player.bet;
             player.winAmount -= player.bet;
+            return;
         }
         else if (player.isBlackJack())
             player.gameStatus = "BlackJack";

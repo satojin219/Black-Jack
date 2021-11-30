@@ -36,15 +36,16 @@ export class Controller {
         this.decidePlayerAction();
     }
     renderAIAction(player, action) {
-        let userDecision = player.promptPlayer();
-        let userData = {
-            "action": action,
-            "betAmount": player.bet
-        };
-        if (player.type == "user")
-            userDecision = player.promptPlayer(userData);
+        let userData = player.promptPlayer();
+        if (player.type == "user") {
+            let userDecision = {
+                "action": action,
+                "bet": player.bet
+            };
+            userData = player.promptPlayer();
+        }
         // this.view.updateUserInfo(player);   
-        this.table.evaluateMove(player, userDecision);
+        this.table.evaluateMove(player, userData);
         if (player.gameDecision["action"] == "hit") {
             this.view.updateUserInfo(player);
             this.view.addCard(player);
@@ -53,12 +54,15 @@ export class Controller {
             }, 1000);
         }
         else if (player.gameDecision["action"] == "double") {
+            console.log(player);
             this.view.updateUserInfo(player);
             this.view.addCard(player);
             setTimeout(() => {
+                if (player.getHandScore() > 21)
+                    player.gameStatus = "bust";
                 this.view.updateUserInfo(player);
                 return this.decidePlayerAction();
-            }, 500);
+            }, 1000);
         }
         else {
             let actions = ["broken", "bust", "stand", "doubleStand", "surrender", "BlackJack"];
@@ -78,7 +82,6 @@ export class Controller {
         if (player.type == "user") {
             setTimeout(() => {
                 this.view.removeUnselctableBtn();
-                this.renderAIAction(player, action);
             }, 1000);
             return;
         }

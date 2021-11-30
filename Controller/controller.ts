@@ -46,6 +46,13 @@ export class Controller{
   renderAIAction(player,action?){
 
     let userData = player.promptPlayer();
+    if(player.type == "user"){
+      let userDecision = {
+        "action": action,
+        "bet": player.bet
+      }
+      userData = player.promptPlayer();
+    }
 
     // this.view.updateUserInfo(player);   
     this.table.evaluateMove(player, userData);
@@ -56,12 +63,14 @@ export class Controller{
         return this.renderAIAction(player);
     },1000);
     }else if(player.gameDecision["action"] == "double"){
+      console.log(player)
       this.view.updateUserInfo(player);   
       this.view.addCard(player);
       setTimeout(()=>{
+        if(player.getHandScore() > 21) player.gameStatus = "bust";
         this.view.updateUserInfo(player);
         return this.decidePlayerAction();
-    },500); 
+    },1000); 
     }else{
       let actions  :any= ["broken", "bust", "stand","doubleStand", "surrender","BlackJack"];
       if(actions.includes(player.gameStatus)){

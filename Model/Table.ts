@@ -69,13 +69,14 @@ export class Table
         //TODO: ここから挙動をコードしてください。
             player.bet = gameDecision["amount"];
 
-                player.gameStatus = gameDecision["action"];
+            player.gameStatus = gameDecision["action"];
             
             // if(this.gamePhase == "betting")player.chips -=player.bet;
             if(player.getHandScore() > 21){
                 player.gameStatus = "bust";
                 player.chips -= player.bet;
                 player.winAmount -= player.bet;
+                return;
             } 
             else if(player.isBlackJack())  player.gameStatus = "BlackJack";
             else if(gameDecision["action"] == "hit"){
