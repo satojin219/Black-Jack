@@ -51,13 +51,6 @@ export class View{
     document.querySelector("body").classList.toggle("body-fixed");
   }
 
-  public addUnselctableBtn(){
-    View.config.actingPage.querySelector(".wood").classList.add("unselectableBtn")
-  }
-  public removeUnselctableBtn(){
-    View.config.actingPage.querySelector(".wood").classList.remove("unselectableBtn")
-  }
- 
   renderStartPage(){
     View.config.initialForm.innerHTML = `
     <div class=" vh-100 d-flex  justify-content-center align-items-center">
@@ -97,165 +90,7 @@ export class View{
     })
   }
 
-  renderCards(player:Player,target){
-    let cards :Card[] = player.hand;
-    
-    for(let i=0; i < cards.length; i++){
-      let div = document.createElement("div");
-      div.className = `${player.name}-card${i+1}`;
-
-        div.innerHTML +=`
-        <div class="card">
-        <div class="front">
-        <span>${cards[i].rank}${View.suitMark[cards[i].suit]}</span>${View.suitMark[cards[i].suit]}<span>${cards[i].rank}${View.suitMark[cards[i].suit]}</span></div>
-        <div class="back"></div>
-        </div>
-        `;
-        target.append(div);
-        const cardTarget = target.querySelector(`.${player.name}-card${i+1}`);
-        const card = cardTarget.querySelector(".card");
-        if(cards[i].suit == "H" || cards[i].suit == "D") card.classList.add("suit-red");
-      }
-    return target; 
-  }
-
-  renderPlayer(players :Player[]){
-    let target = document.createElement("div");
-    target.classList.add("col-12","d-flex","jusfify-content-between","text-center");
-
-    for(let i =0; i < players.length;i++){
-      target.innerHTML += `
-      <div class = "d-flex justify-content-around align-items-center flex-column col-4 mb-150px">
-      <div class="text-white">
-          <h3>${View.fontAwsome[players[i].type]}
-          ${players[i].name}</h3>
-          <div class="d-md-flex">
-            <p id="${players[i].name}-score" class="mx-1 my-1 p-1">Score: ${players[i].getHandScore()}</p>
-            <p id="${players[i].name}-bet" class="mx-1 my-1 p-1 ">Bet: ${players[i].bet}</p>
-            <p id="${players[i].name}-chips" class="mx-1 my-1 p-1">Chips: ${players[i].chips}</p>
-          </div>
-          <p id="${players[i].name}-status" class="mx-1 my-1 font-weight-bold p-1 ${players[i].gameStatus}">${players[i].gameStatus}</p>
-        </div>
-
-        <div id="${players[i].name}-hand" class="d-flex justify-content-around align-items-center mt-2 col-9 col-lg-5 col-md-4">
-        
-        </div>
-        </div>
-        `;
-        let cardTarget = target.querySelector(`#${players[i].name}-hand`)
-        this.renderCards(players[i],cardTarget); 
-    }
-   return target;
-  }
-
-  renderActingPage(){
-    const players = this.controller.table.players;
-    const house = this.controller.table.house;
-    this.displayNone(View.config.initialForm);
-    View.config.actingPage.innerHTML =`
-<button type="button" class="btn modal-btn" data-toggle="modal" data-target="#exampleModal">
-  <i class="fas fa-clipboard-list fa-4x text-white py-3 px-4 log"></i>
-</button>
-
-<div id="modal" class="modal">
-  <div class="modal-body">
-      <div class=" vh-100 d-flex justify-content-center align-items-center">
-        <div class="d-flex justify-content-center align-items-center bg-white col-9 p-3 rounded">
-          <div id="modal-target class="d-flex flex-column" id="result-log-target">
-            <button for="trigger" class="close-button text-white btn btn-primary">✖️ 戻る</button>
-          </div>
-        </div>
-      </div>    
-    </div>
-</div>
-
-
-
-  <div class="d-flex justify-content-around align-items-center  flex-column text-center mb-200px mt-1 ">
-    <div class="text-white">
-      <h3><i class="fas fa-user-tie"></i> House</h3>
-      <p class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
-
-      
-    </div>
-    
-    <div  id="house-cards-target" class="d-flex justify-content-around align-items-center mt-1 col-2 col-lg-1">
-
-        
-    </div>
-     
-      </div>
-      
-      
-    </div>
-  </div>
-
-  <div id="players-target">
-  </div>
-
-<div class="wood d-flex  justify-content-center">
-  <div class="d-flex justify-content-around align-items-center  p-4 col-lg-9 col-10 " >
-        
-        <div class="d-flex flex-column">
-          <div id="surrenderBtn" href="#" class="btn-real-dent btn-blue">
-            <i class="fab fa-font-awesome-flag"></i>
-          </div>
-          <div class="text-white font-weight-bold text-center pt-2">SURRENDER</div>
-        </div>
-        
-        <div class="d-flex flex-column">
-          <div id="standBtn" href="#" class="btn-real-dent btn-red">
-            <i class="fas fa-swords"></i>
-          </div>
-          <div class="text-white font-weight-bold text-center pt-2">STAND</div>
-        </div>
-        
-        
-        
-        <div class="d-flex flex-column ">
-          <div  id="doubleBtn" href="#" class="btn-real-dent btn-yellow">
-            <i class="far fa-coins"></i>
-          </div>
-          <div class="text-white font-weight-bold text-center pt-2">DOUBLE</div>
-        </div>
-        
-        <div class="d-flex flex-column">
-          <div id="hitBtn" href="#" class=" btn-real-dent btn-green ">
-            <i class="fas fa-coin"></i>
-          </div>
-          <div class="text-white font-weight-bold text-center pt-2">HIT</div>
-        </div>
-        
-      </div>
-    </div>
-    `;
-
-    let cardTarget = View.config.actingPage.querySelector(`#house-cards-target`)
-    this.renderCards(house,cardTarget);
-    View.config.actingPage.querySelector("#players-target").append(this.renderPlayer(players))
-    const front = View.config.actingPage.querySelectorAll(".front");
-    const back = View.config.actingPage.querySelectorAll(".back");
-    setTimeout(()=>{
-      for(let i=0; i < front.length; i++){
-    
-        back[i].classList.add("back-rotate");
-        front[i].classList.add("front-rotate");
-      }
-    
-    },100);
-
-    const controller = this.controller;
-    const table = this.table;
-    let actionList = ["surrender", "stand", "hit", "double"]
-    actionList.forEach(function(action){
-        let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
-        actionBtn.addEventListener("click", ()=>{
-          controller.renderAIAction(table.players[1],action);
-          // this.controller.renderAIAction(action);
-        })
-    })
-  }
-
+  
   renderBettingModal(){
     const userInfo = this.controller.table.players[1];
     let betAmount :number= userInfo.bet;
@@ -328,19 +163,170 @@ export class View{
     })
   }
 
+  renderCards(player:Player,target){
+    let cards :Card[] = player.hand;
+    
+    for(let i=0; i < cards.length; i++){
+      let div = document.createElement("div");
+      div.className = `${player.name}-card${i+1}`;
+
+        div.innerHTML +=`
+        <div class="card">
+        <div class="front">
+        <span>${cards[i].rank}${View.suitMark[cards[i].suit]}</span>${View.suitMark[cards[i].suit]}<span>${cards[i].rank}${View.suitMark[cards[i].suit]}</span></div>
+        <div class="back"></div>
+        </div>
+        `;
+        target.append(div);
+        const cardTarget = target.querySelector(`.${player.name}-card${i+1}`);
+        const card = cardTarget.querySelector(".card");
+        if(cards[i].suit == "H" || cards[i].suit == "D") card.classList.add("suit-red");
+      }
+    return target; 
+  }
+
+  renderPlayer(players :Player[]){
+    let target = document.createElement("div");
+    target.classList.add("col-12","d-flex","jusfify-content-between","text-center");
+
+    for(let i =0; i < players.length;i++){
+      target.innerHTML += `
+      <div class = "d-flex justify-content-around align-items-center flex-column col-4 mb-150px">
+      <div class="text-white">
+          <h3 id="${players[i].name}">${View.fontAwsome[players[i].type]}
+          ${players[i].name}</h3>
+          <div class="d-md-flex">
+            <p id="${players[i].name}-score" class="mx-1 my-1 p-1">Score: ${players[i].getHandScore()}</p>
+            <p id="${players[i].name}-bet" class="mx-1 my-1 p-1 ">Bet: ${players[i].bet}</p>
+            <p id="${players[i].name}-chips" class="mx-1 my-1 p-1">Chips: ${players[i].chips}</p>
+          </div>
+          <p id="${players[i].name}-status" class="mx-1 my-1 font-weight-bold p-1 ${players[i].gameStatus}">${players[i].gameStatus}</p>
+        </div>
+
+        <div id="${players[i].name}-hand" class="d-flex justify-content-around align-items-center mt-2 col-9 col-lg-5 col-md-4">
+        
+        </div>
+        </div>
+        `;
+        let cardTarget = target.querySelector(`#${players[i].name}-hand`)
+        this.renderCards(players[i],cardTarget); 
+    }
+   return target;
+  }
+
+  renderActingPage(){
+    const players = this.controller.table.players;
+    const house = this.controller.table.house;
+    this.displayNone(View.config.initialForm);
+    View.config.actingPage.innerHTML =`
+<button type="button" class="btn modal-btn" data-toggle="modal" data-target="#exampleModal">
+  <i class="fas fa-clipboard-list fa-4x text-white py-3 px-4 log"></i>
+</button>
+
+<div id="modal" class="modal">
+  <div class="modal-body">
+      <div class=" vh-100 d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center bg-white col-9 p-3 rounded">
+          <div id="modal-target class="d-flex flex-column" id="result-log-target">
+            <button for="trigger" class="close-button text-white btn btn-primary">✖️ 戻る</button>
+          </div>
+        </div>
+      </div>    
+    </div>
+</div>
+
+  <div class="d-flex justify-content-around align-items-center  flex-column text-center mb-200px mt-1 ">
+    <div class="text-white">
+      <h3><i class="fas fa-user-tie"></i> House</h3>
+      <p class="mx-1 my-1 p-1">Score: ${house.getHandScore()}</p>
+    </div>
+    
+    <div  id="house-cards-target" class="d-flex justify-content-around align-items-center mt-1 col-2 col-lg-1">
+    </div>
+  </div>    
+</div>
+</div>
+
+  <div id="players-target">
+  </div>
+
+<div class="wood d-flex  justify-content-center">
+  <div class="d-flex justify-content-around align-items-center  p-4 col-lg-9 col-10 " >
+        
+        <div class="d-flex flex-column" id="surrenderBtn">
+          <div  href="#" class="btn-real-dent btn-blue">
+            <i class="fab fa-font-awesome-flag"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">SURRENDER</div>
+        </div>
+        
+        <div class="d-flex flex-column" id="standBtn">
+          <div  href="#" class="btn-real-dent btn-red">
+            <i class="fas fa-swords"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">STAND</div>
+        </div>
+        
+        
+        
+        <div class="d-flex flex-column" id="doubleBtn">
+          <div   href="#" class="btn-real-dent btn-yellow">
+            <i class="far fa-coins"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">DOUBLE</div>
+        </div>
+        
+        <div class="d-flex flex-column" id="hitBtn">
+          <div  href="#" class=" btn-real-dent btn-green ">
+            <i class="fas fa-coin"></i>
+          </div>
+          <div class="text-white font-weight-bold text-center pt-2">HIT</div>
+        </div>
+        
+      </div>
+    </div>
+    `;
+
+    let cardTarget = View.config.actingPage.querySelector(`#house-cards-target`)
+    this.renderCards(house,cardTarget);
+    View.config.actingPage.querySelector("#players-target").append(this.renderPlayer(players))
+    const front = View.config.actingPage.querySelectorAll(".front");
+    const back = View.config.actingPage.querySelectorAll(".back");
+    setTimeout(()=>{
+      for(let i=0; i < front.length; i++){
+    
+        back[i].classList.add("back-rotate");
+        front[i].classList.add("front-rotate");
+      }
+    
+    },100);
+
+    const controller = this.controller;
+    const table = this.table;
+    let actionList = ["surrender", "stand", "hit", "double"]
+    actionList.forEach(function(action){
+        let actionBtn = View.config.actingPage.querySelector(`#${action}Btn`);
+        actionBtn.addEventListener("click", ()=>{
+          controller.renderAIAction(table.players[1],action);
+          // this.controller.renderAIAction(action);
+        })
+    })
+  }
+
+
   public renderChipsBetAmount(ele1,ele2,bet,chips){
     ele1.innerHTML = `You Bet : $${bet.toString()}`;
     ele2.innerHTML = `Your Chips : $${chips.toString()}`;
   }
 
-  updateUserInfo(player){
+  public updateUserInfo(player){
     this.updateScore(player);
     this.updateBet(player);
     this.updateChips(player);
     this.updateGameStatus(player)
   }
 
-  updateGameStatus(player){
+  public updateGameStatus(player){
     let gameStatus = View.config.actingPage.querySelector(`#${player.name}-status`);
     gameStatus.className= `mx-1 my-1 font-weight-bold p-1 ${player.gameStatus}`;
     gameStatus.innerHTML = player.gameStatus;
@@ -349,20 +335,22 @@ export class View{
     // gameStatus.innerHTML = player.gameDecision["action"];
   }
 
-  updateScore(player){
+  public updateScore(player){
     let bet = View.config.actingPage.querySelector(`#${player.name}-score`);
     bet.innerHTML = `Score: ${player.getHandScore()}`;
   }
-  updateBet(player){
+
+  public updateBet(player){
     let bet = View.config.actingPage.querySelector(`#${player.name}-bet`);
     bet.innerHTML = `Bet: ${player.bet}`;
   }
-  updateChips(player){
+
+  public updateChips(player){
     let chips = View.config.actingPage.querySelector(`#${player.name}-chips`);
     chips.innerHTML = `Chips: ${player.chips}`;
   }
 
-  addCard(player){
+  public addCard(player){
     const target = View.config.actingPage.querySelector(`#${player.name}-hand`);
 
     let cards = player.hand;
@@ -391,8 +379,34 @@ export class View{
             front.classList.add("front-rotate");
           }
         ,10);
-
     }
+  public currentPlayer(target){
+    target.classList.toggle("text-warning");
+  }
+
+  public
+
+  public addUnselctableBtn(action){
+    const btn = View.config.actingPage.querySelector(`#${action}Btn`);
+    btn.classList.add("unselectableBtn");
   
+  }
+  public removeUnselctableBtn(action){
+    const btn = View.config.actingPage.querySelector(`#${action}Btn`);
+    btn.classList.remove("unselectableBtn");
+    
+  }
+  public addAllUnselctableBtn(){
+    let actionList = ["surrender", "stand", "hit", "double"];
+    for(let action of actionList){
+      this.addUnselctableBtn(action);
+    }
+  }
+  public removeAllUnselctableBtn(){
+    let actionList = ["surrender", "stand", "hit", "double"];
+    for(let action of actionList){
+      this.removeUnselctableBtn(action);
+    }
+  }
 
 }

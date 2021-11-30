@@ -53,10 +53,6 @@ export class Table
         
 
     }
-
-   
-        
-    
     /*
         Player player : テーブルは、Player.promptPlayer()を使用してGameDecisionを取得し、GameDecisionとgameTypeに応じてPlayerの状態を更新します。
         return Null : このメソッドは、プレーヤの状態を更新するだけです。

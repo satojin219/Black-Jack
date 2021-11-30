@@ -165,9 +165,7 @@ ul {
 .btn-real-dent :hover{
   opacity: 0.8;
 }
-.unselectableBtn{
-  opacity: 0.5;
-}
+
 
 /* card */
 .card{
@@ -276,6 +274,13 @@ div.card div.back{
   color: white;
   border-radius: 100%;
 }
+
+.unselectableBtn{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
 
 
 

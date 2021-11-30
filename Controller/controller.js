@@ -32,7 +32,6 @@ export class Controller {
         // for(let player of this.table.players){
         //   this.view.updateUserInfo(player);
         // }
-        this.view.addUnselctableBtn();
         this.decidePlayerAction();
     }
     renderAIAction(player, action) {
@@ -50,6 +49,8 @@ export class Controller {
         // this.view.updateUserInfo(player);   
         this.table.evaluateMove(player, userData);
         if (player.gameDecision["action"] == "hit") {
+            this.view.addUnselctableBtn("surrender");
+            this.view.addUnselctableBtn("double");
             this.view.updateUserInfo(player);
             this.view.addCard(player);
             setTimeout(() => {
@@ -63,6 +64,7 @@ export class Controller {
                 if (player.getHandScore() > 21)
                     player.gameStatus = "bust";
                 this.view.updateUserInfo(player);
+                this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
                 return this.decidePlayerAction();
             }, 1000);
         }
@@ -71,6 +73,7 @@ export class Controller {
             if (actions.includes(player.gameStatus)) {
                 setTimeout(() => {
                     this.view.updateUserInfo(player);
+                    this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
                     return this.decidePlayerAction();
                 }, 500);
             }
@@ -81,17 +84,18 @@ export class Controller {
         if (this.table.allPlayerActionsResolved())
             return this.haveTurn();
         let player = this.table.getTurnPlayer();
+        this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
         if (player.type === "user") {
+            this.view.removeAllUnselctableBtn();
             setTimeout(() => {
-                this.view.removeUnselctableBtn();
             }, 1000);
         }
         else {
+            this.view.addAllUnselctableBtn();
             setTimeout(() => {
                 this.view.updateUserInfo(player);
                 this.renderAIAction(player);
             }, 2000);
-            // return this.decidePlayerAction();
         }
         this.table.turnCounter++;
     }
