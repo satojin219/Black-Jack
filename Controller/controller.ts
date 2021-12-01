@@ -19,8 +19,24 @@ export class Controller{
 
     // bettingページへ移行する
     this.view.displayNone(View.config.initialForm);
+    this.view.displayBlock(View.config.bettingModal);
     this.view.toggleFixed();
     this.view.renderBettingModal();
+
+  }
+  resetGame(){
+    this.view.displayNone(View.config.resultModal);
+    this.view.displayNone(View.config.actingPage);
+    this.table.blackjackClearPlayerHandsAndBets();
+    this.view.toggleFixed();
+
+    if(this.table.players[1].gameStatus == "gameOver"){
+      this.view.displayBlock(View.config.initialForm);
+      this.view.renderStartPage();
+    }else{
+      this.view.displayBlock(View.config.bettingModal);
+      this.view.renderBettingModal();
+    }
 
   }
   
@@ -34,11 +50,8 @@ export class Controller{
     // 全てのプレイヤーのbet終了後、actingページへ移行する
     this.view.displayNone(View.config.bettingModal);
     this.view.toggleFixed();
+    this.view.displayBlock(View.config.actingPage);
     this.view.renderActingPage();
-    // for(let player of this.table.players){
-    //   this.view.updateUserInfo(player);
-    // }
-
     this.decidePlayerAction();
   }
 
@@ -125,7 +138,6 @@ export class Controller{
       },2000);
     }
     this.table.turnCounter++;
-    console.log( this.table.turnCounter)
 
   }
 
@@ -140,9 +152,17 @@ export class Controller{
         return this.renderHouseAction();
       },2000);
     }else{
-      console.log(this.table.house.gameStatus)
+      // ハウスのスコアが17以上だったらhaveTurnを呼び出しゲームフェーズを "roundOver"に切り替える。
       this.haveTurn();
-      this.view.updateGameStatus(this.table.house);
+      setTimeout(()=>{
+        this.view.updateGameStatus(this.table.house);
+      },1000)
+      setTimeout(()=>{
+        
+        this.view.displayBlock(View.config.resultModal);
+        this.view.renderResultModal();
+      },2000);
+
     }
   }
     
@@ -150,43 +170,32 @@ export class Controller{
 
   haveTurn(userData ?){
     const player = this.table.getTurnPlayer();
-    console.log(this.table.gamePhase)
-
+    
     if(this.table.gamePhase == "betting"){
       if(this.table.onFirstPlayer()){
-        // betを初期化し、カードをプレイヤーに配る
+        this.table.roundCounter++;
+        // betを初期化し、カードをプレイヤーに配る。ラウンドも一つ足す
         this.table.players.forEach(player => player.bet = 0);
         this.table.blackjackAssignPlayerHands();
       }
       // AIのbetを決めるためにpromptPlayer()を呼び出す
-    if(userData == undefined) userData = player.promptPlayer();
-        this.table.evaluateMove(player, userData);
-      
-        if(this.table.onLastPlayer()){
-            this.table.gamePhase = "acting";
-           
-        }
-        }else if(this.table.gamePhase == "acting"){
-        // if(player.gameDecision["betAmount"] > 0){
-        //   if(userData == undefined) userData = player.promptPlayer();
-        //     this.table.evaluateMove(player, userData);
-       
-        // } 
-        if(this.table.allPlayerActionsResolved()){
-          this.table.gamePhase = "evaluatingWinner";
-          console.log("houseTurn");
-        } 
-
- 
-    }else if(this.table.gamePhase === "evaluatingWinner"){
-       this.table.blackjackEvaluateAndGetRoundResults();
-        this.table.gamePhase = "roundOver";
-        console.log(this.table.resultsLog)
-     
-
-    } else {
-        console.log("haveTurn内のerror")
+    if(userData == undefined){
+      userData = player.promptPlayer();
+      console.log(userData);
     }
+        this.table.evaluateMove(player, userData);
+        if(this.table.onLastPlayer()) this.table.gamePhase = "acting";
+        
+        }else if(this.table.gamePhase == "acting"){
+        if(this.table.allPlayerActionsResolved()) this.table.gamePhase = "evaluatingWinner";
+        
+        }else if(this.table.gamePhase === "evaluatingWinner"){
+          this.table.blackjackEvaluateAndGetRoundResults();
+          this.table.gamePhase = "roundOver";
+        }else{
+          console.log("haveTurn内のerror")
+        }
+        console.log(this.table.turnCounter)
     
     this.table.turnCounter++;
 }

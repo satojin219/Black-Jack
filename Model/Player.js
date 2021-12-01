@@ -14,6 +14,7 @@ export class Player {
         this.bet = 0;
         // 勝利金額。正の数にも負の数にもなります。
         this.winAmount = 0;
+        this.result = "";
         // プレイヤーのゲームの状態やアクションを表します。
         // ブラックジャックの場合、最初の状態は「betting」です。
         this.gameStatus = 'betting';
@@ -36,13 +37,11 @@ export class Player {
         }
         else {
             // AIの場合
-            if (this.gameStatus == "betting") {
+            if (this.gameStatus == "betting" || this.gameDecision["action"] == "betting") {
                 this.gameDecision["betAmount"] = this.decideBetAmount();
-                ;
             }
             else if (this.gameDecision["betAmount"] > 0) {
                 this.gameDecision["action"] = this.decideAction();
-                ;
             }
         }
         return new GameDecision(this.gameDecision["action"], this.gameDecision["betAmount"]);

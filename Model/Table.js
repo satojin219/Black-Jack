@@ -47,11 +47,6 @@ export class Table {
         else if (gameDecision["action"] == "hit") {
             player.gameStatus = "hit";
             player.hand.push(this.deck.drawOne());
-            // if(player.getHandScore() > 21){
-            //     player.gameStatus = "bust";
-            //     player.chips -= player.bet;
-            //     player.winAmount -= player.bet;
-            //     }
         }
         else if (gameDecision["action"] == "stand") {
             player.gameStatus = "stand";
@@ -66,13 +61,6 @@ export class Table {
             player.gameStatus = "double";
             player.bet *= 2;
             player.hand.push(this.deck.drawOne());
-            // if(player.getHandScore() > 21){
-            //     player.gameStatus = "bust";
-            //     player.chips -= player.bet;
-            //     player.winAmount -= player.bet;
-            //     }else{
-            //         player.gameStatus = "doubleStand";
-            //     }
         }
         else
             player.gameStatus = "bet";
@@ -81,7 +69,7 @@ export class Table {
     houseGetHand() {
         let houseHandeScore = this.house.getHandScore();
         this.house.hand.push(this.deck.drawOne());
-        this.house.gameStatus = houseHandeScore > 21 ? "bust" : this.house.isBlackJack() ? "blackjack" : "hit";
+        this.house.gameStatus = houseHandeScore > 21 ? "bust" : this.house.isBlackJack() ? "BlackJack" : "hit";
     }
     /*
        return String : 新しいターンが始まる直前の全プレイヤーの状態を表す文字列。
@@ -93,15 +81,11 @@ export class Table {
         // while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
         let houseHandeScore = this.house.getHandScore();
         this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
-        this.resultsLog.push(`Round: ${this.roundCounter}`);
-        this.resultsLog.push(`<li>name : ${this.house.name}, score ${this.house.getHandScore()}</li>`);
+        this.resultsLog.push(`<li>Round: ${this.roundCounter}<li>`);
         let playerResult = "";
         let result = "";
         for (let player of this.players) {
-            if (player.gameStatus === 'surrender') {
-                result = "surrender";
-            }
-            else if (player.gameStatus === 'broken') {
+            if (player.gameStatus === 'broken' || player.gameStatus === 'surrender') {
                 result = "lose";
                 // ハウスがブラックジャックの場合、
                 // プレイヤーがブラックジャックの場合、「プッシュ」になります。
@@ -115,8 +99,8 @@ export class Table {
                     player.winAmount = 0;
                 }
                 else {
-                    result = "lose";
                     player.winAmount -= player.gameStatus == "double" ? player.bet * 2 : player.bet;
+                    result = "lose";
                 }
                 // ハウスがバスト、またはプレイヤーの手札がディーラの手札よりきい場合
                 // プレイヤーがブラックジャックの場合、ベット額の 1.5 倍を手れます。
@@ -138,9 +122,12 @@ export class Table {
                 result = "push";
                 player.winAmount = 0;
             }
-            playerResult += `<li>name : ${player.name}, action : ${player.gameStatus}, ${result} : ${player.winAmount}, chips : ${player.chips}, bet ${player.bet},score ${player.getHandScore()}</li>`;
+            player.chips += player.winAmount;
+            player.result = result;
+            playerResult += `<li>name : ${player.name}, ${player.result} : ${player.winAmount}</li>`;
         }
         this.resultsLog.push(playerResult);
+        console.log(this.resultsLog);
     }
     /*
        return null : デッキから2枚のカードを手札に加えることで、全プレイヤーの状態を更新します。
@@ -162,13 +149,21 @@ export class Table {
     */
     blackjackClearPlayerHandsAndBets() {
         //TODO: ここから挙動をコードしてください。
+        this.gamePhase = "betting";
+        this.turnCounter = 0;
         this.house.gameStatus = "waiting";
         this.house.hand = [];
+        this.deck.resetDeck();
         this.players.forEach(player => {
-            player.gameStatus = player.chips > 0 ? 'betting' : 'gameOver';
+            player.gameStatus = player.chips > 0 ? 'bet' : 'gameOver';
+            if (player.type == "gameOver")
+                player.gameStatus = "broken";
             player.hand = [];
             player.bet = 0;
+            player.gameDecision["betAmount"] = 0;
+            player.gameDecision["action"] = "betting";
             player.winAmount = 0;
+            console.log(player);
         });
     }
     /*

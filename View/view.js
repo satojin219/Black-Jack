@@ -50,7 +50,6 @@ export class View {
                 return alert("ゲームを選択してください");
             if (userName.value == "Bot1" || userName.value == "Bot2")
                 return alert("その名前は使う事ができません");
-            console.log(this.controller);
             return this.controller.startGame(gameType.value, userName.value);
         });
     }
@@ -113,7 +112,6 @@ export class View {
             if (betAmount == 0)
                 return;
             this.controller.evaluteBet(betAmount);
-            // this.controller.renderTable(this.controller.table);
         });
     }
     renderCards(player, target) {
@@ -166,7 +164,6 @@ export class View {
     renderActingPage() {
         const players = this.controller.table.players;
         const house = this.controller.table.house;
-        console.log(house);
         this.displayNone(View.config.initialForm);
         View.config.actingPage.innerHTML = `
 <button type="button" class="btn modal-btn" data-toggle="modal" data-target="#exampleModal">
@@ -177,7 +174,7 @@ export class View {
   <div class="modal-body">
       <div class=" vh-100 d-flex justify-content-center align-items-center">
         <div class="d-flex justify-content-center align-items-center bg-white col-9 p-3 rounded">
-          <div id="modal-target class="d-flex flex-column" id="result-log-target">
+          <div id="modal-target" class="d-flex flex-column" id="result-log-target">
             <button for="trigger" class="close-button text-white btn btn-primary">✖️ 戻る</button>
           </div>
         </div>
@@ -335,6 +332,52 @@ export class View {
         for (let action of actionList) {
             this.removeUnselctableBtn(action);
         }
+    }
+    renderResultModal() {
+        const user = this.table.players[1];
+        let target = document.createElement("div");
+        target.classList.add("modal", "vh-100", "d-flex", "justify-content-center", "align-items-center");
+        target.innerHTML = `
+  <div class="d-flex align-items-center col-lg-8 col-9 ">
+    <div class="shadow-lg col-12 text-center p-5  rounded  bg-light">
+      <h2 id ="result" class=""></h2>
+      <div class="d-flex align-items-center col-12 justify-content-center">
+      <p id ="winAmount" class="text-white rounded-pill p-1 col-3"></p>
+      </div>
+      <button id ="resultBtn" type="button" class="btn  col-12 text-white  font-weight-bold rounded m-1"></button>
+  </div>
+</div>
+    `;
+        const resultBtn = target.querySelector("#resultBtn");
+        const result = target.querySelector("#result");
+        const winAmount = target.querySelector("#winAmount");
+        resultBtn.addEventListener("click", () => {
+            this.controller.resetGame();
+        });
+        if (user.chips == 0) {
+            result.innerHTML = "GAME OVER";
+            resultBtn.innerHTML = "New Game";
+            resultBtn.classList.add("btn-success");
+        }
+        else {
+            result.innerHTML = `You  ${user.result}`;
+            resultBtn.innerHTML = "Next Game";
+            resultBtn.classList.add("btn-success");
+            if (user.result == "win") {
+                winAmount.innerHTML = `+${user.winAmount}`;
+                winAmount.classList.add("bg-warning");
+            }
+            else if (user.result == "lose") {
+                winAmount.innerHTML = `${user.winAmount}`;
+                winAmount.classList.add("bg-primary");
+            }
+            else {
+                winAmount.innerHTML = `${user.winAmount}`;
+                winAmount.classList.add("bg-success");
+            }
+        }
+        View.config.resultModal.append(target);
+        this.toggleFixed();
     }
 }
 View.config = {

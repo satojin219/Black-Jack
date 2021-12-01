@@ -231,6 +231,10 @@ div.card:hover div.front{
 div.card div.back{
   background-color:rgb(41, 117, 204);
 }
+.broken{
+  background-color: black;
+  border-radius: 5px;
+}
 .waiting{
   background-color: gray;
   border-radius: 5px;

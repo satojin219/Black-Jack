@@ -17,6 +17,7 @@ export class Player
    public winAmount :number;
    public gameStatus :string;
    public gameDecision:{action:string,betAmount:number}
+   public result;
 
     constructor(name, type, gameType, chips = 400)
     {
@@ -40,6 +41,7 @@ export class Player
 
         // 勝利金額。正の数にも負の数にもなります。
         this.winAmount = 0;
+        this.result = "";
 
         // プレイヤーのゲームの状態やアクションを表します。
         // ブラックジャックの場合、最初の状態は「betting」です。
@@ -65,10 +67,11 @@ export class Player
         this.gameDecision["betAmount"] = userData["bet"]
       }else{
         // AIの場合
-        if(this.gameStatus == "betting"){
-            this.gameDecision["betAmount"] =  this.decideBetAmount();;
+        if(this.gameStatus == "betting" || this.gameDecision["action"] == "betting"){
+            this.gameDecision["betAmount"] =  this.decideBetAmount();
+            
         }else if(this.gameDecision["betAmount"] > 0){
-            this.gameDecision["action"] = this.decideAction();;
+            this.gameDecision["action"] = this.decideAction();
         }
       }
 
