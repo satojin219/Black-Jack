@@ -91,8 +91,8 @@ export class Controller{
     },1000); 
     }else{
       let actions  :any= ["broken", "bust", "stand","double", "surrender","BlackJack"];
-      this.view.addAllUnselctableBtn();
       if(actions.includes(player.gameStatus)){
+        this.view.addAllUnselctableBtn();
         setTimeout(()=>{
           return  this.changePlayerTurn(player)
       },1000);

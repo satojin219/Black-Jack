@@ -80,7 +80,8 @@ export class Table {
         // 全てのプレイヤーの行動が終了したのでハウスも17になるまでカードを引く
         // while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
         let houseHandeScore = this.house.getHandScore();
-        this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
+        // this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
+        this.house.gameStatus = houseHandeScore > 21 ? "bust" : this.house.isBlackJack() ? "BlackJack" : "hit";
         this.resultsLog.push(`Round: ${this.roundCounter}`);
         let playerResult = "";
         let result = "";
