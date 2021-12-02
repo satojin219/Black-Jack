@@ -171,7 +171,7 @@ export class View {
 </button>
 
 
-<div id="modal" class="modal">
+<div id="modal" class="modal d-none">
   <div class="modal-body">
       <div class="vh-100 d-flex justify-content-center align-items-center">
       <div class="d-flex flex-column justify-content-center align-items-center bg-white col-9 p-3 rounded ">

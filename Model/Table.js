@@ -127,7 +127,7 @@ export class Table {
             if (player.gameStatus != "surrender" && player.gameStatus != "bust")
                 player.chips += player.winAmount;
             player.result = result;
-            playerResult += `<li>name : ${player.name}, ${player.result} : ${player.winAmount}</li>`;
+            playerResult += `<li>${player.name}, ${player.result} : ${player.winAmount}</li>`;
         }
         this.resultsLog.push(playerResult);
         console.log(this.resultsLog);

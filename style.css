@@ -3,7 +3,7 @@ body{
   /* background-size: cover; */
   background-repeat: repeat;
   background-position: top;
-
+  font-family: 'Balsamiq Sans', cursive !important;
 }
 ul {
   list-style: none;

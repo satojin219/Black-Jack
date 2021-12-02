@@ -36,7 +36,6 @@ export class Controller {
         this.view.displayNone(View.config.resultModal);
         this.view.displayNone(View.config.actingPage);
         this.table.blackjackClearPlayerHandsAndBets();
-        console.log(this.table.resultsLog);
         this.view.toggleFixed();
         if (this.table.players[1].gameStatus == "gameOver") {
             this.view.displayBlock(View.config.initialForm);
