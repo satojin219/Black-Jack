@@ -25,13 +25,13 @@ export class Controller {
         // bettingページへ移行する
         this.view.displayNone(View.config.initialForm);
         this.view.displayBlock(View.config.bettingModal);
-        this.view.toggleFixed();
         this.view.renderBettingModal();
     }
     resetGame() {
         this.view.displayNone(View.config.resultModal);
         this.view.displayNone(View.config.actingPage);
         this.table.blackjackClearPlayerHandsAndBets();
+        console.log(this.table.resultsLog);
         this.view.toggleFixed();
         if (this.table.players[1].gameStatus == "gameOver") {
             this.view.displayBlock(View.config.initialForm);
@@ -51,9 +51,10 @@ export class Controller {
         }
         // 全てのプレイヤーのbet終了後、actingページへ移行する
         this.view.displayNone(View.config.bettingModal);
-        this.view.toggleFixed();
         this.view.displayBlock(View.config.actingPage);
         this.view.renderActingPage();
+        // resultLogを追加する
+        this.view.renderResultLog(this.table.resultsLog);
         this.decidePlayerAction();
     }
     renderPlayerAction(player, action) {
@@ -85,22 +86,23 @@ export class Controller {
             setTimeout(() => {
                 if (player.getHandScore() > 21)
                     player.gameStatus = "bust";
-                this.view.updateUserInfo(player);
-                this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
-                return this.decidePlayerAction();
+                return this.changePlayerTurn(player);
             }, 1000);
         }
         else {
             let actions = ["broken", "bust", "stand", "double", "surrender", "BlackJack"];
+            this.view.addAllUnselctableBtn();
             if (actions.includes(player.gameStatus)) {
                 setTimeout(() => {
-                    this.view.addAllUnselctableBtn();
-                    this.view.updateUserInfo(player);
-                    this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
-                    return this.decidePlayerAction();
+                    return this.changePlayerTurn(player);
                 }, 1000);
             }
         }
+    }
+    changePlayerTurn(player) {
+        this.view.updateUserInfo(player);
+        this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
+        this.decidePlayerAction();
     }
     decidePlayerAction() {
         // 全てのプレイヤーの行動が終わったらrenderHouseAction()でフェーズを切り替える。
@@ -115,7 +117,7 @@ export class Controller {
         let player = this.table.getTurnPlayer();
         this.view.currentPlayer(View.config["actingPage"].querySelector(`#${player.name}`));
         if (player.type === "user") {
-            if (player.gameStatus == "blackjack") {
+            if (player.gameStatus == "BlackJack") {
                 this.table.turnCounter++;
                 this.renderPlayerAction(player);
                 return;

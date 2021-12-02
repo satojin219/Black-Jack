@@ -31,7 +31,8 @@ export class Deck {
     resetDeck() {
         //TODO: ここから挙動をコードしてください。
         const suits = ["H", "D", "C", "S"];
-        const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+        const ranks = ["A", "Q", "K"];
+        // "2", "3", "4", "5", "6", "7", "8", "9", "10","J"
         for (let i = 0; i < suits.length; i++) {
             for (let j = 0; j < ranks.length; j++) {
                 this.cards.push(new Card(suits[i], ranks[j]));

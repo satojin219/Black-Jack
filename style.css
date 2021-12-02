@@ -286,6 +286,10 @@ div.card div.back{
   opacity: 0.5;
   pointer-events: none;
 }
+.modal-height{
+  height: 120px;
+  overflow-y: scroll;
+}
 
 
 

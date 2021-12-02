@@ -219,17 +219,23 @@ export class View{
   <i class="fas fa-clipboard-list fa-4x text-white py-3 px-4 log"></i>
 </button>
 
+
 <div id="modal" class="modal">
   <div class="modal-body">
-      <div class=" vh-100 d-flex justify-content-center align-items-center">
-        <div class="d-flex justify-content-center align-items-center bg-white col-9 p-3 rounded">
-          <div id="modal-target" class="d-flex flex-column" id="result-log-target">
-            <button for="trigger" class="close-button text-white btn btn-primary">✖️ 戻る</button>
-          </div>
+      <div class="vh-100 d-flex justify-content-center align-items-center">
+      <div class="d-flex flex-column justify-content-center align-items-center bg-white col-9 p-3 rounded ">
+      <h2>Result Log</h2>
+      <div class="d-flex flex-column modal-height" id="result-log-target">
+ 
+      </div>
+      <button for="trigger" class="my-3 close-button text-white btn btn-primary col-6">✖️ 戻る</button>
+    </div>
         </div>
       </div>    
     </div>
 </div>
+
+
 
   <div class="d-flex justify-content-around align-items-center  flex-column text-center mb-200px mt-1 ">
     <div class="text-white">
@@ -307,6 +313,21 @@ export class View{
           controller.renderPlayerAction(table.players[1],action);
         })
     })
+
+    const btn =  View.config.actingPage.querySelector('.modal-btn');
+    const modal =  View.config.actingPage.querySelector('#modal') as HTMLElement;
+    const view = this;
+    btn.addEventListener('click',()=>{
+      view.displayBlock(modal);
+      view.toggleFixed();
+    });
+
+    const closeBtn =  View.config.actingPage.querySelector('.close-button');
+
+    closeBtn.addEventListener('click',()=>{
+      modal.classList.remove("d-block");
+      view.toggleFixed();
+    });
   }
 
 
@@ -451,6 +472,22 @@ export class View{
     View.config.resultModal.append(target);
     this.toggleFixed();
 
+
+  }
+
+  public renderResultLog(log){
+    const target = View.config.actingPage.querySelector("#result-log-target");
+    target.innerHTML = "";
+    if(log == null){
+      target.classList.remove("modal-height");
+    }
+    for(let i=0; i < log.length; i +=2){
+      target.innerHTML +=`<h5>${log[i]}</h5>
+      <ul class="px-3">
+       ${log[i+1]}
+      </ul>`
+    }
+    
 
   }
 

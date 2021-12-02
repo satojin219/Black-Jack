@@ -115,7 +115,7 @@ export class Table
         let houseHandeScore :number = this.house.getHandScore();
         this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
 
-        this.resultsLog.push(`<li>Round: ${this.roundCounter}<li>`);
+        this.resultsLog.push(`Round: ${this.roundCounter}`);
         let playerResult = "";
         let result :string = "";
         for(let player of this.players){

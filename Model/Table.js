@@ -81,7 +81,7 @@ export class Table {
         // while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
         let houseHandeScore = this.house.getHandScore();
         this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
-        this.resultsLog.push(`<li>Round: ${this.roundCounter}<li>`);
+        this.resultsLog.push(`Round: ${this.roundCounter}`);
         let playerResult = "";
         let result = "";
         for (let player of this.players) {
