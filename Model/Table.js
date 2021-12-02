@@ -80,7 +80,6 @@ export class Table {
         // 全てのプレイヤーの行動が終了したのでハウスも17になるまでカードを引く
         // while(this.house.getHandScore() < 17) this.house.hand.push(this.deck.drawOne());
         let houseHandeScore = this.house.getHandScore();
-        // this.house.gameStatus = houseHandeScore > 21 ? "bust" : "stand";
         this.house.gameStatus = houseHandeScore > 21 ? "bust" : this.house.isBlackJack() ? "BlackJack" : "hit";
         this.resultsLog.push(`Round: ${this.roundCounter}`);
         let playerResult = "";
@@ -117,13 +116,14 @@ export class Table {
             }
             else if (player.gameStatus == "bust" || (this.house.gameStatus != "bust" && this.house.getHandScore() > player.getHandScore())) {
                 result = "lose";
-                player.winAmount -= player.gameStatus == "double" ? player.bet * 2 : player.bet;
+                player.winAmount -= player.gameDecision["action"] == "double" ? player.bet * 2 : player.bet;
             }
             else {
                 result = "push";
                 player.winAmount = 0;
             }
-            player.chips += player.winAmount;
+            if (player.gameStatus != "surrender")
+                player.chips += player.winAmount;
             player.result = result;
             playerResult += `<li>name : ${player.name}, ${player.result} : ${player.winAmount}</li>`;
         }

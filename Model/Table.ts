@@ -141,19 +141,21 @@ export class Table
             // プレイヤーがダブルの場合、ベット額の 2 倍を手に入れます。
             // プレイヤーがスタンドの場合、ベット額の 1 倍を手に入れます。
             }else if(this.house.gameStatus == "bust" || this.house.getHandScore() < player.getHandScore()){
-                result = "win";
-                player.winAmount +=player.isBlackJack() ? player.bet * 1.5 : player.gameStatus == "double" ? player.bet * 2 : player.bet;
-            // ハウスがバストしておらず、ハウスの手札がプレイヤーの手札より大きい場合
+
+                    result = "win";
+                    player.winAmount +=player.isBlackJack() ? player.bet * 1.5 : player.gameStatus == "double" ? player.bet * 2 : player.bet;
+                
+                    // ハウスがバストしておらず、ハウスの手札がプレイヤーの手札より大きい場合
             // プレイヤーがダブルの場合、ベット額の 2 倍を失います。
             // プレイヤーがスタンドの場合、ベット額の 1 倍を失います。    
             }else if(player.gameStatus == "bust" || (this.house.gameStatus != "bust" && this.house.getHandScore() > player.getHandScore())){
                 result = "lose";
-                player.winAmount -= player.gameStatus == "double" ? player.bet * 2 : player.bet; 
+                player.winAmount -= player.gameDecision["action"] == "double" ? player.bet * 2 : player.bet; 
             }else{
                 result = "push";
                 player.winAmount = 0;
             }
-            player.chips +=player.winAmount;
+            if(player.gameStatus != "surrender") player.chips +=player.winAmount;
             player.result = result;
             playerResult += `<li>name : ${player.name}, ${player.result} : ${player.winAmount}</li>`;
 

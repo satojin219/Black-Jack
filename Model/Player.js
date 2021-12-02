@@ -57,6 +57,8 @@ export class Player {
             // let actions :string[] = ["double"];
             if (this.chips > this.bet * 2 && this.gameStatus != "hit")
                 actions = ["hit", "double"];
+            if (this.chips < 100)
+                actions.push("surrender");
             let index = Player.getRandomInteger(actions.length, 0);
             action = actions[index];
             action = actions[0];
@@ -80,7 +82,7 @@ export class Player {
         betamount = betamount % betDenominations[2];
         let chip20Num = Math.floor(betamount / betDenominations[1]);
         betamount = betamount % betDenominations[1];
-        let chip5Num = betamount % betDenominations[0] ? betamount % betDenominations[0] : 0;
+        let chip5Num = betamount % betDenominations[0] ? betamount % betDenominations[0] : 1;
         this.gameDecision["betAmount"] = (betDenominations[0] * chip5Num) + (betDenominations[1] * chip20Num) + (betDenominations[2] * chip50Num) + (betDenominations[3] * chip100Num);
         return this.gameDecision["betAmount"];
     }

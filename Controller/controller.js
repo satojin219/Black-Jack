@@ -25,7 +25,12 @@ export class Controller {
         // bettingページへ移行する
         this.view.displayNone(View.config.initialForm);
         this.view.displayBlock(View.config.bettingModal);
-        this.view.renderBettingModal();
+        if (this.table.userType == "ai") {
+            this.evaluteBet();
+        }
+        else {
+            this.view.renderBettingModal();
+        }
     }
     resetGame() {
         this.view.displayNone(View.config.resultModal);
@@ -38,8 +43,13 @@ export class Controller {
             this.view.renderStartPage();
         }
         else {
-            this.view.displayBlock(View.config.bettingModal);
-            this.view.renderBettingModal();
+            if (this.table.userType == "ai") {
+                this.evaluteBet();
+            }
+            else {
+                this.view.displayBlock(View.config.bettingModal);
+                this.view.renderBettingModal();
+            }
         }
     }
     evaluteBet(userBet) {
@@ -58,46 +68,48 @@ export class Controller {
         this.decidePlayerAction();
     }
     renderPlayerAction(player, action) {
-        let userData;
-        if (player.type == "user") {
-            let userDecision = {
-                "action": action,
-                "bet": player.bet
-            };
-            userData = player.promptPlayer(userDecision);
-        }
-        else {
-            userData = player.promptPlayer();
-        }
-        this.table.evaluateMove(player, userData);
-        if (player.gameDecision["action"] == "hit") {
-            this.view.addUnselctableBtn("surrender");
-            this.view.addUnselctableBtn("double");
-            this.view.updateUserInfo(player);
-            this.view.addCard(player);
-            setTimeout(() => {
-                return this.renderPlayerAction(player);
-            }, 1000);
-        }
-        else if (player.gameDecision["action"] == "double") {
-            this.view.addAllUnselctableBtn();
-            this.view.updateUserInfo(player);
-            this.view.addCard(player);
-            setTimeout(() => {
-                if (player.getHandScore() > 21)
-                    player.gameStatus = "bust";
-                return this.changePlayerTurn(player);
-            }, 1000);
-        }
-        else {
-            let actions = ["broken", "bust", "stand", "double", "surrender", "BlackJack"];
-            if (actions.includes(player.gameStatus)) {
-                this.view.addAllUnselctableBtn();
-                setTimeout(() => {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userData;
+            if (player.type == "user") {
+                let userDecision = {
+                    "action": action,
+                    "bet": player.bet
+                };
+                userData = player.promptPlayer(userDecision);
+            }
+            else {
+                userData = player.promptPlayer();
+            }
+            this.table.evaluateMove(player, userData);
+            if (player.gameDecision["action"] == "hit") {
+                yield this.view.addUnselctableBtn("surrender");
+                yield this.view.addUnselctableBtn("double");
+                yield this.view.updateUserInfo(player);
+                yield this.view.addCard(player);
+                yield setTimeout(() => {
+                    return this.renderPlayerAction(player);
+                }, 1000);
+            }
+            else if (player.gameDecision["action"] == "double") {
+                yield this.view.addAllUnselctableBtn();
+                yield this.view.updateUserInfo(player);
+                yield this.view.addCard(player);
+                yield setTimeout(() => {
+                    if (player.getHandScore() > 21)
+                        player.gameStatus = "bust";
                     return this.changePlayerTurn(player);
                 }, 1000);
             }
-        }
+            else {
+                let actions = ["broken", "bust", "stand", "double", "surrender", "BlackJack"];
+                if (actions.includes(player.gameStatus)) {
+                    yield this.view.addAllUnselctableBtn();
+                    yield setTimeout(() => {
+                        return this.changePlayerTurn(player);
+                    }, 1000);
+                }
+            }
+        });
     }
     changePlayerTurn(player) {
         this.view.updateUserInfo(player);
