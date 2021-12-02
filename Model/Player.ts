@@ -143,12 +143,7 @@ export class Player
 
 
     isBlackJack() :boolean{
-        let count = 0;
-        for(let card of this.hand){
-            if(card.rank ==="K" || card.rank ==="Q" || card.rank ==="J")count++;
-        }
-
-        return this.getHandScore() === 21 && this.hand.length === 2 && count == 1;
+        return this.getHandScore() === 21 && this.hand.length === 2;
     }
 }
 

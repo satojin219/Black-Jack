@@ -68,7 +68,8 @@ export class Table
             player.gameStatus = gameDecision["action"];
             
             // if(this.gamePhase == "betting")player.chips -=player.bet;
-            if(player.getHandScore() > 21){
+            if(player.chips <= 0)player.gameStatus = "broken";
+            else if(player.getHandScore() > 21){
                 player.gameStatus = "bust";
                 player.chips -= player.bet;
                 player.winAmount -= player.bet;
@@ -120,7 +121,7 @@ export class Table
         let result :string = "";
 
         for(let player of this.players){
-           if(player.gameStatus === 'broken' || player.gameStatus === 'surrender'){
+           if(player.gameStatus === 'broken' || player.gameStatus === 'surrender' ||player.gameStatus == "bust"){
                 result = "lose";
             
                 // ハウスがブラックジャックの場合、
@@ -148,14 +149,14 @@ export class Table
                     // ハウスがバストしておらず、ハウスの手札がプレイヤーの手札より大きい場合
             // プレイヤーがダブルの場合、ベット額の 2 倍を失います。
             // プレイヤーがスタンドの場合、ベット額の 1 倍を失います。    
-            }else if(player.gameStatus == "bust" || (this.house.gameStatus != "bust" && this.house.getHandScore() > player.getHandScore())){
+            }else if((this.house.gameStatus != "bust" && this.house.getHandScore() > player.getHandScore())){
                 result = "lose";
                 player.winAmount -= player.gameDecision["action"] == "double" ? player.bet * 2 : player.bet; 
             }else{
                 result = "push";
                 player.winAmount = 0;
             }
-            if(player.gameStatus != "surrender") player.chips +=player.winAmount;
+            if(player.gameStatus != "surrender" && player.gameStatus != "bust") player.chips +=player.winAmount;
             player.result = result;
             playerResult += `<li>name : ${player.name}, ${player.result} : ${player.winAmount}</li>`;
 
