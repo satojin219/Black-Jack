@@ -1,5 +1,6 @@
 # Black-Jack
-
+Recursion　project5の課題です。
+初期画面の入力欄に記入せずゲームを始めrと自動でゲームが進行します。
 ## URL
 https://satojin219.github.io/Black-Jack/
 
